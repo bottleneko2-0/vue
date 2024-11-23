@@ -1,3 +1,83 @@
+<script setup>
+import {
+  onBeforeMount,
+  onMounted,
+  onBeforeUpdate,
+  onUpdated,
+  onBeforeUnmount,
+  onUnmounted,
+  ref,
+  computed
+} from 'vue'
+
+const TOKEN_NAME = "user-token"
+const STATUS_LOGIN = 1
+const STATUS_SIGNUP = 2
+
+const email = ref("")
+const password = ref("")
+
+const login = async () => {
+    if(this.email != "" && this.password != "") {
+        const userData = {
+            user: {
+                email: this.email,
+                password: this.password
+            }
+        },
+
+        try {
+            // 取得API資料
+
+            // 登入成功
+            const token = headers.authorization //取得使用者token
+            localStorage.setItem(TOKEN_NAME, token)
+            // 跳轉使用者頁面
+        } catch {
+            // 警告訊息 登入失敗
+        }
+    }
+}
+
+const goLogin = () => {
+    this
+    .content
+}
+
+const goLogout = () => {
+    const token = localStorage.getItem(TOKEN_NAME)
+    if(token) {
+        try {
+            // 清 server token
+
+            if(res) {
+                // 清 local
+                localStorage.removeItem(TOKEN_NAME)
+                // 返回登入頁面
+            }
+        } catch {
+            // 錯誤訊息
+        }
+    }
+}
+
+const userSigned = computed(() => {
+    return localStorage.getItem(TOKEN_NAME) != null
+})
+
+const isLogin = computed(() => {
+    return this.contentStatus == STATUS_LOGIN
+})
+
+const checkStatus = onBeforeMount(() => {
+    if (this.userSigned) {
+        // 已登入進入使用者頁面
+    } else {
+        // 未登入前往登入
+    }
+})
+</script>
+
 <template>
     <body class="overflow-hidden root-container">
         <header class="z-10 h-16 md:mt-2 md:mr-2 header-bg md:rounded-t-2xl">
@@ -39,7 +119,7 @@
                             </svg>
                         </div>
                     </div>
-                    <span class="text-sm flex-none max-w-[8rem] truncate">登入</span>
+                    <span class="text-sm flex-none max-w-[8rem] truncate" @click="goLogin">登入</span>
                     <div class="p-1 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
@@ -52,7 +132,7 @@
             <a href="https://bottleneko.app/" class="sidebar-head">
                 <img src="../img/bottleneko-icon.png" alt="" class="icon">
                 <img src="../img/bottleneko-icon-text.png" alt="" class="icon-text">
-                <h1 class="hidden">BottleNeko</h1>
+                <h1 class="hidden">Capie</h1>
             </a>
             <ul class="sidebar-menu">
                 <li>
@@ -130,15 +210,15 @@
                         <h3 class="text-2xl font-bold text-white">會員登入</h3>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"></path></svg>
-                            <input type="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="信箱">
+                            <input type="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="信箱" v-model.trim="email">
                         </div>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"></path></svg>
-                            <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼">
+                            <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼" v-model.trim="password">
                         </div>
                         <div class="flex flex-col w-full gap-2">
                             <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" disabled>登入</button>
-                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500">還沒有帳號？前往註冊</button>
+                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500" @click="goSignup">還沒有帳號？前往註冊</button>
                         </div>
                         <hr class="w-full my-4 border border-zinc-700/50">
                         <button data-v-91445d95="" class="flex items-center w-full gap-2 p-2 bg-white border shadow rounded-2xl">
