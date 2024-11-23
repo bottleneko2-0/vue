@@ -14,6 +14,7 @@ import Login from "../views/Login.vue";
 import Signup from "../views/Signup.vue";
 import LoginHomePageView from "@/views/LoginHomepage.vue";
 import CardSeries from "@/views/CardSeries.vue";
+import AddArticle from "../views/AddArticle.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +89,11 @@ const router = createRouter({
       path: "/card-series",
       name: "card-series",
       component: CardSeries
+    },
+    {
+      path: "/add-article",
+      name: "add-article",
+      component: AddArticle
     }
   ],
 });
