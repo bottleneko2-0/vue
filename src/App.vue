@@ -12,6 +12,7 @@ import { RouterLink, RouterView } from "vue-router";
     <RouterLink to="/Card-List-by-Series">Card List by Series</RouterLink>
     <RouterLink to="/daily-card">Daily Card</RouterLink>
     <RouterLink to="/login-homepage">login homepage</RouterLink>
+    <RouterLink to="carddeck">Carddeck</RouterLink>
   </nav> -->
 
   <RouterView />
