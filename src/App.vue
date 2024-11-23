@@ -12,6 +12,8 @@ import { RouterLink, RouterView } from "vue-router";
     <RouterLink to="/Card-List-by-Series">Card List by Series</RouterLink>
     <RouterLink to="/daily-card">Daily Card</RouterLink>
     <RouterLink to="/login-homepage">login homepage</RouterLink>
+    <RouterLink to="/add-article">Add Article</RouterLink>
+    <RouterLink to="/social">Social</RouterLink>
   </nav> -->
 
   <RouterView />
@@ -21,6 +23,7 @@ import { RouterLink, RouterView } from "vue-router";
 /* body{
   width: 100vw;
 } */
+
 
 a,
 .green {
