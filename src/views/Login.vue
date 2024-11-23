@@ -1,18 +1,23 @@
 <script setup>
-import {
-  onBeforeMount,
-  onMounted,
-  onBeforeUpdate,
-  onUpdated,
-  onBeforeUnmount,
-  onUnmounted,
-  ref,
-  computed
-} from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const loginUser = () => {
+    localStorage.setItem(TOKEN_NAME, token)
+    router.push({ name: 'account-page'})
+}
+
+const goSignup = () => {
+    router.push({ name: 'signup' })
+}
+
+const goLogin = () => {
+    router.push({ name: 'login' })
+}
 
 const TOKEN_NAME = "user-token"
-const STATUS_LOGIN = 1
-const STATUS_SIGNUP = 2
 
 const email = ref("")
 const password = ref("")
@@ -24,24 +29,20 @@ const login = async () => {
                 email: this.email,
                 password: this.password
             }
-        },
+        }
 
         try {
             // 取得API資料
 
             // 登入成功
-            const token = headers.authorization //取得使用者token
-            localStorage.setItem(TOKEN_NAME, token)
+            //取得使用者token
+            // localStorage.setItem(TOKEN_NAME, token)
             // 跳轉使用者頁面
+            this.loginUser()
         } catch {
             // 警告訊息 登入失敗
         }
     }
-}
-
-const goLogin = () => {
-    this
-    .content
 }
 
 const goLogout = () => {
@@ -61,21 +62,23 @@ const goLogout = () => {
     }
 }
 
-const userSigned = computed(() => {
-    return localStorage.getItem(TOKEN_NAME) != null
-})
+// const userSigned = computed(() => {
+//     return localStorage.getItem(TOKEN_NAME) != null
+// })
 
-const isLogin = computed(() => {
-    return this.contentStatus == STATUS_LOGIN
-})
+// const isLogin = computed(() => {
+//     return this.contentStatus == STATUS_LOGIN
+// })
 
-const checkStatus = onBeforeMount(() => {
-    if (this.userSigned) {
-        // 已登入進入使用者頁面
-    } else {
-        // 未登入前往登入
-    }
-})
+// const checkStatus = onBeforeMount(() => {
+//     if (this.userSigned) {
+//         // 已登入進入使用者頁面
+//         loginUser()
+//     } else {
+//         // 未登入前往登入
+//         goLogin()
+//     }
+// })
 </script>
 
 <template>
