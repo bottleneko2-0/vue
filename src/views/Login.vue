@@ -1,11 +1,12 @@
 <script setup>
 import { onBeforeMount, ref, computed } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import{ login } from '../api/login'
 
 const router = useRouter()
 
 const loginUser = () => {
-    localStorage.setItem(TOKEN_NAME, token)
+    // localStorage.setItem(TOKEN_NAME, token)
     router.push({ name: 'account-page'})
 }
 
@@ -17,50 +18,57 @@ const goLogin = () => {
     router.push({ name: 'login' })
 }
 
-const TOKEN_NAME = "user-token"
+
+// const TOKEN_NAME = "user-token"
 
 const email = ref("")
 const password = ref("")
 
-const login = async () => {
-    if(this.email != "" && this.password != "") {
-        const userData = {
-            user: {
-                email: this.email,
-                password: this.password
-            }
-        }
-
-        try {
-            // 取得API資料
-
-            // 登入成功
-            //取得使用者token
-            // localStorage.setItem(TOKEN_NAME, token)
-            // 跳轉使用者頁面
-            this.loginUser()
-        } catch {
-            // 警告訊息 登入失敗
-        }
+const submit = async () => {
+    let res = await login(this.email, this.password)
+    if (res.status == 0) {
+        router.push({ name: 'login' })
     }
 }
+// const login = async () => {
+//     if(this.email != "" && this.password != "") {
+//         const userData = {
+//             user: {
+//                 email: this.email,
+//                 password: this.password
+//             }
+//         }
 
-const goLogout = () => {
-    const token = localStorage.getItem(TOKEN_NAME)
-    if(token) {
-        try {
-            // 清 server token
+//         try {
+//             // 取得API資料
 
-            if(res) {
-                // 清 local
-                localStorage.removeItem(TOKEN_NAME)
-                // 返回登入頁面
-            }
-        } catch {
-            // 錯誤訊息
-        }
-    }
-}
+//             // 登入成功
+//             //取得使用者token
+//             // localStorage.setItem(TOKEN_NAME, token)
+//             // 跳轉使用者頁面
+//             this.loginUser()
+//         } catch {
+//             // 警告訊息 登入失敗
+//         }
+//     }
+// }
+
+// const goLogout = () => {
+//     const token = localStorage.getItem(TOKEN_NAME)
+//     if(token) {
+//         try {
+//             // 清 server token
+
+//             if(res) {
+//                 // 清 local
+//                 localStorage.removeItem(TOKEN_NAME)
+//                 // 返回登入頁面
+//             }
+//         } catch {
+//             // 錯誤訊息
+//         }
+//     }
+// }
 
 // const userSigned = computed(() => {
 //     return localStorage.getItem(TOKEN_NAME) != null
@@ -206,7 +214,7 @@ const goLogout = () => {
         <main class="relative content-container bg-base md:my-2 md:mr-2 z-1">
             <div class="h-full px-4 content scroll-smooth scrollbar md:px-6">
                 <section class="w-full md:grid md:place-content-center">
-                    <div class="flex flex-col items-center justify-center gap-4 p-4 shadow-lg rounded-xl">
+                    <form class="flex flex-col items-center justify-center gap-4 p-4 shadow-lg rounded-xl" @submit.prevent="submit()">
                         <div class="flex items-center gap-2">
                             <img src="../img/bottleneko-icon.png" alt="" class="h-[5rem] w-[5rem] rounded-full">
                         </div>
@@ -220,15 +228,15 @@ const goLogout = () => {
                             <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼" v-model.trim="password">
                         </div>
                         <div class="flex flex-col w-full gap-2">
-                            <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" disabled>登入</button>
+                            <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900 cursor-pointer" disabled>登入</button>
                             <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500" @click="goSignup">還沒有帳號？前往註冊</button>
                         </div>
                         <hr class="w-full my-4 border border-zinc-700/50">
-                        <button data-v-91445d95="" class="flex items-center w-full gap-2 p-2 bg-white border shadow rounded-2xl">
+                        <button class="flex items-center w-full gap-2 p-2 bg-white border shadow rounded-2xl">
                             <img src="../img/google-icon.png" class="flex-none size-7">
                             <span class="block w-full text-center"> Sign in with Google</span>
                         </button>
-                    </div>
+                    </form>
                 </section>
             </div>
         </main>
@@ -501,7 +509,7 @@ section {
     height: 100%;
 }
 
-section > div {
+section > form {
     width: 500px;
     background-color: rgb(24, 24, 27);
 }
@@ -625,7 +633,7 @@ section > div {
     body {
         background-color: #121212;
     }
-    section > div {
+    section > form {
         width: 100%;
         background-color: #121212;
     }
