@@ -1,3 +1,46 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const router = useRouter()
+
+const goSignup = () => {
+    router.push({ name: 'signup' })
+}
+
+const goLogin = () => {
+    router.push({ name: 'login' })
+}
+
+const email = ref("")
+const password = ref("") 
+
+const API_URL = 'http://localhost:7890/api'
+
+const submit = async () => {
+    console.log(email.value, password.value);
+  try {
+    const res = await axios.post(`${API_URL}/users`, {
+      email: email.value,
+      password: password.value
+    })
+
+    localStorage.setItem('token', res.data.token)
+    // router.push({ name: 'account-page' })
+  } catch (error) {
+    console.error('API Error:', error)
+    Swal.fire({
+      icon: 'error',
+      title: '登入失敗',
+      text: error.response.data.message || '請檢查信箱密碼是否正確'
+    })
+  }
+}
+console.log(email.value, password.value)
+</script>
+
 <template>
     <body class="overflow-hidden root-container">
         <header class="z-10 h-16 md:mt-2 md:mr-2 header-bg md:rounded-t-2xl">
@@ -39,7 +82,7 @@
                             </svg>
                         </div>
                     </div>
-                    <span class="text-sm flex-none max-w-[8rem] truncate">登入</span>
+                    <span class="text-sm flex-none max-w-[8rem] truncate" @click="goLogin">登入</span>
                     <div class="p-1 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
@@ -52,7 +95,7 @@
             <a href="https://bottleneko.app/" class="sidebar-head">
                 <img src="../img/bottleneko-icon.png" alt="" class="icon">
                 <img src="../img/bottleneko-icon-text.png" alt="" class="icon-text">
-                <h1 class="hidden">BottleNeko</h1>
+                <h1 class="hidden">Capie</h1>
             </a>
             <ul class="sidebar-menu">
                 <li>
@@ -123,29 +166,29 @@
         <main class="relative content-container bg-base md:my-2 md:mr-2 z-1">
             <div class="h-full px-4 content scroll-smooth scrollbar md:px-6">
                 <section class="w-full md:grid md:place-content-center">
-                    <div class="flex flex-col items-center justify-center gap-4 p-4 shadow-lg rounded-xl">
+                    <form @submit.prevent="submit" class="flex flex-col items-center justify-center gap-4 p-4 shadow-lg rounded-xl">
                         <div class="flex items-center gap-2">
                             <img src="../img/bottleneko-icon.png" alt="" class="h-[5rem] w-[5rem] rounded-full">
                         </div>
                         <h3 class="text-2xl font-bold text-white">會員登入</h3>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"></path></svg>
-                            <input type="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="信箱">
+                            <input id="email" type="email" placeholder="信箱" v-model.trim="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500">
                         </div>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"></path></svg>
-                            <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼">
+                            <input id="password" type="password" placeholder="密碼" v-model.trim="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500">
                         </div>
                         <div class="flex flex-col w-full gap-2">
-                            <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" disabled>登入</button>
-                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500">還沒有帳號？前往註冊</button>
+                            <button type="submit" :disabled="!email || !password" class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900 cursor-pointer">登入</button>
+                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500" @click="goSignup">還沒有帳號？前往註冊</button>
                         </div>
                         <hr class="w-full my-4 border border-zinc-700/50">
-                        <button data-v-91445d95="" class="flex items-center w-full gap-2 p-2 bg-white border shadow rounded-2xl">
+                        <button class="flex items-center w-full gap-2 p-2 bg-white border shadow rounded-2xl">
                             <img src="../img/google-icon.png" class="flex-none size-7">
                             <span class="block w-full text-center"> Sign in with Google</span>
                         </button>
-                    </div>
+                    </form>
                 </section>
             </div>
         </main>
@@ -418,7 +461,7 @@ section {
     height: 100%;
 }
 
-section > div {
+section > form {
     width: 500px;
     background-color: rgb(24, 24, 27);
 }
@@ -542,7 +585,7 @@ section > div {
     body {
         background-color: #121212;
     }
-    section > div {
+    section > form {
         width: 100%;
         background-color: #121212;
     }
