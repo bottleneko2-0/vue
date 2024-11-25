@@ -2,7 +2,7 @@
     <body class="overflow-hidden root-container">
         <header class="z-10 h-16 md:mt-2 md:mr-2 header-bg md:rounded-t-2xl">
             <nav class="header-container">
-                <button data-v-3e737e76="" class="flex-none p-1 text-white rounded-full bg-black/50 default-transition hover:bg-zinc-800/50">
+                <button data-v-3e737e76="" class="flex-none p-1 text-white rounded-full bg-black/50 default-transition hover:bg-zinc-800/50" @click="goMainPage">
                     <svg data-v-3e737e76="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"></path>
                     </svg>
@@ -120,7 +120,7 @@
             </button>
         </nav>
         <div class="background"></div>
-        <main class="relative content-container bg-base md:my-2 md:mr-2 z-1">
+        <main class="relative content-container bg-base md:my-2 md:mr-2 z-1" id="app">
             <div class="h-full px-4 content scroll-smooth scrollbar md:px-6">
                 <section class="w-full md:grid md:place-content-center">
                     <div class="flex flex-col items-center gap-4 overflow-auto shadow-lg rounded-xl md:p-4 justify-evenly scrollbar">
@@ -130,33 +130,37 @@
                         <h3 class="text-2xl font-bold text-white">會員註冊</h3>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"></path></svg>
-                            <input type="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="信箱">
+                            <input type="email" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="信箱" v-model="email">
                         </div>
                         <div class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"></path></svg>
-                            <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼">
+                            <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼" v-model="password">
                         </div>
                         <div class="flex items-center w-full gap-2">
                             <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition">
-                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10"></div>
+                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10">
+                                <input type="checkbox" id="agree-service" v-model="agreeService">
+                                </div>
                                 <p>同意服務條款</p>
-                            </button>
-                            <a href="https://bottleneko.app/eula" class="grid flex-none p-2 rounded-full place-content-center bg-input">
+                            </button>                            
+                                <a href="https://bottleneko.app/eula" class="grid flex-none p-2 rounded-full place-content-center bg-input">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
                             </a>
                         </div>
                         <div class="flex items-center w-full gap-2">
                             <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition">
-                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10"></div>
+                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10">
+                                <input type="checkbox" id="agree-policy" v-model="agreePolicy">
+                                </div>
                                 <p>同意隱私權政策</p>
-                            </button>
-                            <a href="https://bottleneko.app/policy" class="grid flex-none p-2 rounded-full place-content-center bg-input">
+                            </button>                            
+                                <a href="https://bottleneko.app/policy" class="grid flex-none p-2 rounded-full place-content-center bg-input">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
                             </a>
                         </div>
                         <div class="flex flex-col w-full gap-2">
-                            <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" disabled>註冊</button>
-                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500">已經有帳號？前往登入</button>
+                            <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" @click.prevent="signup" :disabled="!isValid">註冊</button>
+                            <button class="flex items-center justify-center w-full gap-2 p-2 rounded-2xl text-cyan-500/50 hover:text-cyan-500" @click="goLogin">已經有帳號？前往登入</button>
                         </div>
                         <hr class="w-full my-4 border border-zinc-700/50">
                         <span class="text-zinc-300">請先同意服務條款與隱私權政策</span>
@@ -170,6 +174,113 @@
         </main>
     </body>
 </template>
+
+<script>
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import router from '../router/index'
+
+export default {
+        data() {
+    return {
+        email: '',
+        password: '',
+        agreeService: false,
+        agreePolicy: false,
+        isValid: false
+    }
+    },
+    watch: {
+    email() {
+        this.validateForm();
+    },
+    password() {
+        this.validateForm();
+    },
+    agreeService() {
+        this.validateForm();
+    },
+    agreePolicy() {
+        this.validateForm();
+    }
+},
+    methods: {
+    validateForm() {
+        this.isValid = this.email.trim() !== ''&& 
+        this.password.trim() !== '' && 
+        this.agreeService && this.agreePolicy;
+    },
+    clearForm(){
+        this.email = ''
+        this.password = ''
+        this.agreeService = false
+        this.agreePolicy = false
+    },
+    goLogin(){
+        this.$router.push('/login');
+    },
+    goMainPage(){
+        this.$router.push('/main-page');
+    },
+    async signup() {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        const errors = {}
+
+        if (!emailRegex.test(this.email.trim())) {
+        errors.email = '電子郵件格式錯誤'
+        } 
+        
+        if (this.password.trim().length < 6) {
+        errors.password = '密碼至少需要6個字元'
+        }
+
+        if (Object.keys(errors).length > 0) {
+        this.clearForm();
+        Swal.fire({
+            icon: 'error',
+            title: '錯誤',
+            text: Object.values(errors).join('\n')
+        })
+        } else {
+            try {
+                const response = await axios.post('http://localhost:3000/api/signup', {
+                    email: this.email,
+                    password: this.password
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.status === 200) {
+                    // console.log('註冊成功');
+                    Swal.fire({
+                    icon: 'success',
+                    title: '註冊成功',
+                })
+                this.clearForm();
+                this.$router.push('/login');
+                } 
+                else {
+                    Swal.fire({
+                    icon: 'error',
+                    title: '錯誤',
+                    text: '註冊失敗',
+                    })
+                    this.clearForm();
+                }
+                }   
+                catch (error) {
+                    Swal.fire({
+                    icon: 'error',
+                    title: '註冊失敗',
+                    text: '此 email 已註冊過',
+                })
+                this.clearForm();            
+            }
+        } 
+}}}             
+</script>
 
 <style scoped>
 @import '@/assets/base.css';
