@@ -114,7 +114,7 @@
                 </span>
             </h2>
             <section class="card-area">
-                <a href="#" class="card-link">
+                <a v-for="article in articles" :key="article.id" href="#" class="card-link">
                     <div class="card-img">
                         <img src="/src/img/麻衣.png" alt="">
                     </div>
@@ -137,179 +137,12 @@
                             </div>
                         </div>
                         <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
+                            <h2>{{ article.title }}</h2>
+                            <p>{{ article.content }}</p>
                         </div>
                     </div>
                 </a>     
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>   
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>  
-                <a href="#" class="card-link">
-                    <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
-                    </div>
-                    <div class="card-user">
-                        <div class="card-user-flex">
-                            <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
-                            </div>
-                            <div class="card-user-p">
-                                <p>XXX</p>
-                                <div class="date-container">
-                                    <p class="date">2024-10-31</p>
-                                    <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
-                                    <div class="chat">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <p>1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-name">
-                            <h2>窮鬼也是鬼</h2>
-                            <p>123</p>
-                        </div>
-                    </div>
-                </a>      
+                    
             </section>
         </div>
         <nav class="footer-nav">
@@ -362,7 +195,25 @@
         </div>
     </div>
 </template>
+<script>
+import axios from 'axios';
 
+export default {
+  data() {
+    return {
+      articles: []
+    };
+  },
+  async created() {
+    try {
+      const response = await axios.get('http://localhost:3001/article/articles');
+      this.articles = response.data; 
+    } catch (error) {
+      console.error('獲取文章列表失敗', error);
+    }
+  }
+};
+</script>
 <style scoped>
 
     a {
