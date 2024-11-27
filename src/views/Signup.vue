@@ -1,3 +1,139 @@
+<script>
+import axios from 'axios'
+import Swal from 'sweetalert2'
+
+export default {
+        data() {
+        return {
+            email: '',
+            password: '',
+            agreeService: false,
+            agreePolicy: false,
+            isValid: false,
+            isServiceButtonGreen: false,
+            isServiceIconShown: false,
+            isPolicyButtonGreen: false,
+            isPolicyIconShown: false,        
+        };
+    },
+    watch: {
+            email:'validateForm',
+            password:'validateForm',
+            isServiceButtonGreen:'validateForm',
+            isPolicyButtonGreen:'validateForm'
+    },
+    methods: {
+    toggleServiceButton() {
+        this.isServiceButtonGreen = !this.isServiceButtonGreen;
+        this.isServiceIconShown = !this.isServiceIconShown;
+    },
+    togglePolicyButton() {
+        this.isPolicyButtonGreen = !this.isPolicyButtonGreen;
+        this.isPolicyIconShown = !this.isPolicyIconShown;
+    },    
+    validateForm() {
+        this.isValid = 
+        this.email.trim() !== ''&& 
+        this.password.trim() !== '' &&
+        this.isServiceButtonGreen &&
+        this.isPolicyButtonGreen
+    },
+    clearForm(){
+        this.email = ''
+        this.password = ''
+        this.agreeService = false
+        this.agreePolicy = false
+    },
+    goLogin(){
+        this.$router.push('/login');
+    },
+    goMainPage(){
+        this.$router.push('/main-page');
+    },
+    async signup() {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        const errors = {}
+
+        if (!emailRegex.test(this.email.trim())) {
+        errors.email = '電子郵件格式錯誤'
+        } 
+        
+        if (this.password.trim().length < 6) {
+        errors.password = '密碼至少需要6個字元'
+        }
+
+        if (Object.keys(errors).length > 0) {
+        this.clearForm();
+        Swal.fire({
+            icon: 'error',
+            title: '錯誤',
+            text: Object.values(errors).join('\n')
+        })
+        } else {
+            try {
+        const response = await axios.post(
+            "http://localhost:3000/register",
+            {
+            username: "User", 
+            email: this.email,
+            password: this.password,
+            },
+            {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            }
+        );
+
+        if (response.status === 200) {
+            Swal.fire({
+            icon: "success",
+            title: "註冊成功",
+            });
+            this.clearForm();
+            this.$router.push("/login");
+        }
+    } catch (error) {
+    console.error("捕獲的錯誤：", error); // 紀錄完整錯誤資訊
+
+    if (error.response) {
+        // 處理後端返回的錯誤
+        const status = error.response.status;
+        const message = error.response.data.message;
+
+        if (status === 409) {
+        Swal.fire({
+            icon: "error",
+            title: "註冊失敗",
+            text: message || "此 email 已註冊過",
+        });
+        } else {
+        Swal.fire({
+            icon: "error",
+            title: "註冊失敗",
+            text: message || "發生未知錯誤，請稍後再試",
+        });
+        }
+    } else if (error.request) {
+        // 沒有收到後端回應，通常是網路問題
+        Swal.fire({
+        icon: "error",
+        title: "註冊失敗",
+        text: "無法連接到伺服器，請檢查網路連線",
+        });
+    } else {
+        // 其他錯誤
+        Swal.fire({
+        icon: "error",
+        title: "註冊失敗",
+        text: `發生錯誤：${error.message}`,
+        });
+    }
+    this.clearForm();
+    }
+}}}}        
+</script>
+
 <template>
     <body class="overflow-hidden root-container">
         <header class="z-10 h-16 md:mt-2 md:mr-2 header-bg md:rounded-t-2xl">
@@ -137,26 +273,36 @@
                             <input type="password" class="w-full p-0 bg-transparent border-none focus:ring-0 placeholder:text-zinc-500" placeholder="密碼" v-model="password">
                         </div>
                         <div class="flex items-center w-full gap-2">
-                            <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition">
-                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10">
-                                <input type="checkbox" id="agree-service" v-model="agreeService">
+                            <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition"
+                            :style="{ backgroundColor: isServiceButtonGreen ? '#203b2a' : '' }"                            
+                            @click="toggleServiceButton"
+                            >
+                                <div v-if="!isServiceIconShown" 
+                                class="flex-none m-1 rounded-full size-5 bg-zinc-300/10"
+                                :class="{'!bg-green-500': isServiceButtonGreen, 'bg-zinc-300/10': !isServiceButtonGreen}">                                
                                 </div>
+                                <svg v-else data-v-91445d95="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-green-400"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path></svg>
                                 <p>同意服務條款</p>
                             </button>                            
                                 <a href="https://bottleneko.app/eula" class="grid flex-none p-2 rounded-full place-content-center bg-input">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
-                            </a>
+                                </a>
                         </div>
                         <div class="flex items-center w-full gap-2">
-                            <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition">
-                                <div class="flex-none m-1 rounded-full size-5 bg-zinc-300/10">
-                                <input type="checkbox" id="agree-policy" v-model="agreePolicy">
+                            <button class="flex items-center w-full gap-2 p-2 rounded-2xl bg-input default-transition"
+                            :style="{ backgroundColor: isPolicyButtonGreen ? '#203b2a' : '' }"                            
+                            @click="togglePolicyButton"
+                            >
+                                <div v-if="!isPolicyIconShown" 
+                                class="flex-none m-1 rounded-full size-5 bg-zinc-300/10"
+                                :class="{'bg-green-500': isPolicyButtonGreen, 'bg-zinc-300/10': !isPolicyButtonGreen}">                                
                                 </div>
+                                <svg v-else data-v-91445d95="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-green-400"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path></svg>
                                 <p>同意隱私權政策</p>
                             </button>                            
                                 <a href="https://bottleneko.app/policy" class="grid flex-none p-2 rounded-full place-content-center bg-input">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-7 text-zinc-300"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
-                            </a>
+                                </a>
                         </div>
                         <div class="flex flex-col w-full gap-2">
                             <button class="flex items-center justify-center w-full gap-2 p-2 text-white rounded-2xl ring ring-white/50 hover:bg-white/90 hover:text-zinc-900" @click.prevent="signup" :disabled="!isValid">註冊</button>
@@ -174,113 +320,6 @@
         </main>
     </body>
 </template>
-
-<script>
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import router from '../router/index'
-
-export default {
-        data() {
-    return {
-        email: '',
-        password: '',
-        agreeService: false,
-        agreePolicy: false,
-        isValid: false
-    }
-    },
-    watch: {
-    email() {
-        this.validateForm();
-    },
-    password() {
-        this.validateForm();
-    },
-    agreeService() {
-        this.validateForm();
-    },
-    agreePolicy() {
-        this.validateForm();
-    }
-},
-    methods: {
-    validateForm() {
-        this.isValid = this.email.trim() !== ''&& 
-        this.password.trim() !== '' && 
-        this.agreeService && this.agreePolicy;
-    },
-    clearForm(){
-        this.email = ''
-        this.password = ''
-        this.agreeService = false
-        this.agreePolicy = false
-    },
-    goLogin(){
-        this.$router.push('/login');
-    },
-    goMainPage(){
-        this.$router.push('/main-page');
-    },
-    async signup() {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-        const errors = {}
-
-        if (!emailRegex.test(this.email.trim())) {
-        errors.email = '電子郵件格式錯誤'
-        } 
-        
-        if (this.password.trim().length < 6) {
-        errors.password = '密碼至少需要6個字元'
-        }
-
-        if (Object.keys(errors).length > 0) {
-        this.clearForm();
-        Swal.fire({
-            icon: 'error',
-            title: '錯誤',
-            text: Object.values(errors).join('\n')
-        })
-        } else {
-            try {
-                const response = await axios.post('http://localhost:3000/api/signup', {
-                    email: this.email,
-                    password: this.password
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.status === 200) {
-                    // console.log('註冊成功');
-                    Swal.fire({
-                    icon: 'success',
-                    title: '註冊成功',
-                })
-                this.clearForm();
-                this.$router.push('/login');
-                } 
-                else {
-                    Swal.fire({
-                    icon: 'error',
-                    title: '錯誤',
-                    text: '註冊失敗',
-                    })
-                    this.clearForm();
-                }
-                }   
-                catch (error) {
-                    Swal.fire({
-                    icon: 'error',
-                    title: '註冊失敗',
-                    text: '此 email 已註冊過',
-                })
-                this.clearForm();            
-            }
-        } 
-}}}             
-</script>
 
 <style scoped>
 @import '@/assets/base.css';

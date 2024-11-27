@@ -540,6 +540,7 @@
 
 <style scoped>
 @import '@/assets/base.css';
+@import '@/assets/main.css';
 
 .root-container {
     display: grid;
