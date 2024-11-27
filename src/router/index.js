@@ -17,7 +17,7 @@ import CardSeries from "@/views/CardSeries.vue";
 import Carddeck from "../views/Carddeck.vue";
 import AddArticle from "../views/AddArticle.vue";
 import Social from "../views/Social.vue";
-
+import FindCard from "../components/find-card/FindCard.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,6 +107,11 @@ const router = createRouter({
       path: "/social",
       name: "social",
       component: Social
+    },
+    {
+      path: "/find-card",
+      name: "find-card",
+      component: FindCard
     },
   ],
 });
