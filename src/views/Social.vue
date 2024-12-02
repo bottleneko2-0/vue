@@ -124,9 +124,9 @@
                                 <img src="/src/img/麻衣.png" alt="">
                             </div>
                             <div class="card-user-p">
-                                <p>XXX</p>
+                                <p>{{ article.username }}</p>
                                 <div class="date-container">
-                                    <p class="date">2024-10-31</p>
+                                    <p class="date">{{ formatDate(article.created_at) }}</p>
                                     <i class="fa-solid fa-globe"></i>
                                     <p class="card-code">UjsZ4</p>
                                     <div class="chat">
@@ -206,12 +206,20 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://localhost:3001/article/articles');
+      const response = await axios.get('http://localhost:3000/article/articles');
       this.articles = response.data; 
     } catch (error) {
       console.error('獲取文章列表失敗', error);
     }
-  }
+  },
+  methods:{
+  formatDate(date) {
+      if (!date) {
+        return '';
+      }
+      return date.split('T')[0];
+    }
+}
 };
 </script>
 <style scoped>
@@ -519,15 +527,14 @@ export default {
     }
 
     .card-area {
-        width: 97%;
-        max-width: 100%;
+        padding: 20px;
+        width: 100%;
         position: absolute;
         top: 250px;
-        left: 24px;
         display: grid;
-        /* grid-template-columns: repeat(5 , 1fr); */
-        grid-template-columns: repeat(5, minmax(198px, 1fr));
+        grid-template-columns: repeat(4,  1fr);
         grid-gap: 24px;
+        box-sizing: border-box;
     }
 
     .card-link {
@@ -580,6 +587,7 @@ export default {
     .card-user-p {
         position: relative;
         width: 100%;
+        align-content: center;
     }
 
     .card-user-p p {
@@ -797,9 +805,9 @@ export default {
         margin-left: 5px;
     }
 
-    @media screen and (min-width: 1440px) {
+    @media screen and (min-width: 1470px) {
         .card-area {
-            grid-template-columns: repeat(7, minmax(198px, 1fr));
+            grid-template-columns: repeat(5,  1fr);
         }
     }
 
@@ -844,7 +852,7 @@ export default {
         }
 
         .card-area {
-            grid-template-columns: repeat(3, minmax(198px, 1fr));
+            grid-template-columns: repeat(4, minmax(198px, 1fr));
         }
 
         .footer-nav {
@@ -857,6 +865,12 @@ export default {
 
         .chat {
             left: 85%;    
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .card-area {
+            grid-template-columns: repeat(3,  1fr);
         }
     }
 

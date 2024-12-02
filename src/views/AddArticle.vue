@@ -70,7 +70,7 @@
                         <div class="btn-img">
                             <img src="/src/img/麻衣.png" alt="">
                         </div>                    
-                        <span>XXXX</span>
+                        <span>{{ username }}</span>
                         <svg data-v-3e737e76="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-4 w-4 flex-none"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
                     </button>
                 </div>
@@ -187,20 +187,33 @@ export default {
     return {
       title: '',  
       content: '', 
+      username: '',
     };
+  },
+  mounted() {
+    this.username = localStorage.getItem('username');
+    if (!this.username) {
+      alert('請先登入！');
+    }
   },
   methods: {
     
     async submitArticle() {
       try {
-        
+        // const userToken = this.userToken
+        if (!this.username) {
+          alert('用户未登录，请先登录');
+          return;
+        }
         const response = await axios.post(
-            'http://localhost:3001/article/articles',
+            'http://localhost:3000/article/articles',
             {
-            title: this.title,
-            content: this.content
+                username: this.username,
+                title: this.title,
+                content: this.content
             }
         );
+        console.log(response.data)
         
         this.title = '';
         this.content = '';
@@ -1037,7 +1050,7 @@ footer {
     margin-left: 5px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
     body {
         min-width: 100%;
     }
