@@ -110,9 +110,9 @@
                         </div>
                         <h2 class="font-size30 color-white h2-padding">之前查看系列</h2>
                         <section class="show-card">
-                            <a href="#" class="url transition-colors">
+                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors">
                                     <div>
-                                        <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
+                                        <img :src ="card.cover || '/src/img/cover.png'" alt="">
                                     </div>
                                     <div class="card-text">
                                         <div class="flex">
@@ -122,126 +122,18 @@
                                                 <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
                                                 </path>
                                             </svg>
-                                            <p class="color-a1">OSK</p>
+                                            <p class="color-a1">{{ card.code.join(', ') }}</p>
                                         </div>
-                                        <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                        <p class="color-a1">2023-12-08</p>
+                                        <p class="font-size20 color-white padding-bottom" >{{ card.name }}</p>
+                                        <p class="color-a1">{{ card.sellAt[0] }}</p>
                                     </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                    <div>
-                                        <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                    </div>
-                                    <div class="card-text">
-                                        <div class="flex">
-                                            <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                                <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                                </path>
-                                                <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                                </path>
-                                            </svg>
-                                            <p class="color-a1">OSK</p>
-                                        </div>
-                                        <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                        <p class="color-a1">2023-12-08</p>
-                                    </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
                             </a>
                         </section>
                         <h2 class="font-size30 color-white">系列<br>
                             <span class="font-size75rem color-a1">一共有{{}}結果</span>
                         </h2>
                         <section class="grid-card">
-                            <RouterLink to="/card-series" class="url transition-colors" @click="handleSeries(1559042)">
+                            <!-- <RouterLink to="/card-series" class="url transition-colors" @click="handleSeries(1559042)">
                                 <div>
                                     <img :src="seriesTestData.cover" alt="">
                                 </div>
@@ -258,116 +150,25 @@
                                     <p class="font-size20 color-white padding-bottom" >跳轉頁面測試用</p>
                                     <p class="color-a1">{{ seriesTestData.sellAt }}</p>
                                 </div>
-                            </RouterLink>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
+                            </RouterLink> -->
+                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors">
+                                    <div>
+                                        <img :src ="card.cover || '/src/img/cover.png'" alt="">
                                     </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
+                                    <div class="card-text">
+                                        <div class="flex">
+                                            <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
+                                                <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
+                                                </path>
+                                                <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
+                                                </path>
+                                            </svg>
+                                            <p class="color-a1">{{ card.code.join(', ') }}</p>
+                                        </div>
+                                        <p class="font-size20 color-white padding-bottom" >{{ card.name }}</p>
+                                        <p class="color-a1">{{ card.sellAt[0] }}</p>
                                     </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            <a href="#" class="url transition-colors">
-                                <div>
-                                    <img src="https://jasonxddd.me:9000/series-cover/osk_176×176.jpg" alt="">
-                                </div>
-                                <div class="card-text">
-                                    <div class="flex">
-                                        <svg data-v-09f2b439="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="icon-size flex-none color-a1">
-                                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z">
-                                            </path>
-                                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z">
-                                            </path>
-                                        </svg>
-                                        <p class="color-a1">OSK</p>
-                                    </div>
-                                    <p class="font-size20 color-white padding-bottom" >【我推的孩子】</p>
-                                    <p class="color-a1">2023-12-08</p>
-                                </div>
-                            </a>
-                            
+                            </a>   
                         </section>
                     </div>
                     <footer class="hero-member-footer">
@@ -557,68 +358,88 @@
         </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { useCardSeriesStore } from "@/stores/card-series";
 import { storeToRefs } from "pinia";
+import axios from "axios";
 
-export default {
-    data(){
-        const cardSeriesStore = useCardSeriesStore();
-        const { seriesTestData } = storeToRefs(cardSeriesStore);
-        return{
-            getSeriesCards: cardSeriesStore.getSeriesCards,
-            saveLastViewSeries: cardSeriesStore.saveLastViewSeries,
-            seriesTestData,
-            getTestSeries: cardSeriesStore.getTestSeries
-        }
-    },
-    methods: {
-    async handleSeries(seriesId){
-        await this.getSeriesCards(seriesId);
-        // console.log("成功獲取資料，執行跳轉至CardSeriesPage");
-        this.saveLastViewSeries(seriesId);
-        // 點擊系列後獲取該系列ID，作為參數調用card-series store裡獲取指定系列資料的function拿到資料，然後順便跳轉到CardSeriesPage，並將現在瀏覽的系列ID存在localstorage
-    },
-    toggleArrow(event) {
-      const button = event.currentTarget;
-      if (!button) return; // 防止按鈕為 null 的情況
-      const icon = button.querySelector("i");
-      if (!icon) return; // 防止圖標為 null 的情況
+//     export default {
+//     data(){
+//         const cardSeriesStore = useCardSeriesStore();
+//         const { seriesTestData } = storeToRefs(cardSeriesStore);
+//         return{
+//             getSeriesCards: cardSeriesStore.getSeriesCards,
+//             saveLastViewSeries: cardSeriesStore.saveLastViewSeries,
+//             seriesTestData,
+//             getTestSeries: cardSeriesStore.getTestSeries
+//         }
+//     },
+//     methods: {
+//     async handleSeries(seriesId){
+//         await this.getSeriesCards(seriesId);
+//         // console.log("成功獲取資料，執行跳轉至CardSeriesPage");
+//         this.saveLastViewSeries(seriesId);
+//         // 點擊系列後獲取該系列ID，作為參數調用card-series store裡獲取指定系列資料的function拿到資料，然後順便跳轉到CardSeriesPage，並將現在瀏覽的系列ID存在localstorage
+//     },
+//     toggleArrow(event) {
+//       const button = event.currentTarget;
+//       if (!button) return; // 防止按鈕為 null 的情況
+//       const icon = button.querySelector("i");
+//       if (!icon) return; // 防止圖標為 null 的情況
 
-      const allButtons = document.querySelectorAll(".sort-button button");
-      allButtons.forEach((btn) => {
-        if (btn !== button) {
-          btn.classList.remove("active");
-          const otherIcon = btn.querySelector("i");
-          if (otherIcon) {
-            otherIcon.classList.remove("fa-arrow-down");
-            otherIcon.classList.add("fa-arrow-up");
-          }
-        }
-      });
+//       const allButtons = document.querySelectorAll(".sort-button button");
+//       allButtons.forEach((btn) => {
+//         if (btn !== button) {
+//           btn.classList.remove("active");
+//           const otherIcon = btn.querySelector("i");
+//           if (otherIcon) {
+//             otherIcon.classList.remove("fa-arrow-down");
+//             otherIcon.classList.add("fa-arrow-up");
+//           }
+//         }
+//       });
 
-      if (button.classList.contains("active")) {
-        if (icon.classList.contains("fa-arrow-up")) {
-          icon.classList.remove("fa-arrow-up");
-          icon.classList.add("fa-arrow-down");
-        } else {
-          icon.classList.remove("fa-arrow-down");
-          icon.classList.add("fa-arrow-up");
-        }
-      } else {
-        button.classList.add("active");
-        icon.classList.remove("fa-arrow-up");
-        icon.classList.add("fa-arrow-down");
-      }
-    },
-    clearInput() {
-      document.getElementById("searchInput").value = ""; // 清空輸入框的文字
-      },
-    },
-    async mounted() {
-        await this.getTestSeries(1559042);
-    },
+//       if (button.classList.contains("active")) {
+//         if (icon.classList.contains("fa-arrow-up")) {
+//           icon.classList.remove("fa-arrow-up");
+//           icon.classList.add("fa-arrow-down");
+//         } else {
+//           icon.classList.remove("fa-arrow-down");
+//           icon.classList.add("fa-arrow-up");
+//         }
+//       } else {
+//         button.classList.add("active");
+//         icon.classList.remove("fa-arrow-up");
+//         icon.classList.add("fa-arrow-down");
+//       }
+//     },
+//     clearInput() {
+//       document.getElementById("searchInput").value = ""; // 清空輸入框的文字
+//       },
+//     },
+//     async mounted() {
+//         await this.getTestSeries(1559042);
+//     },
+// }; 
+
+const cardSeries = ref([])
+const error = ref('')
+const API_URL = 'https://bottleneko.app/api/series'
+
+const fetchCardseries = async () => {
+    try {
+        const response = await axios.get('/api/series');
+        cardSeries.value = response.data
+    }
+    catch (err) {
+        error.value = '獲取系列卡表資料失敗' + err.message
+    }
 };
+
+onMounted(() => {
+    fetchCardseries();
+});
 </script>
 <style scoped>
 .All{
@@ -907,6 +728,7 @@ nav{
     font-weight: 700;
     overflow:hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .font-size30{
     font-size: 30px;
@@ -932,6 +754,9 @@ nav{
 }
 .color-a1{
     color: #a1a1aa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .url{
     padding: 16px;
