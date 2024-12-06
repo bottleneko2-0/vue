@@ -1,26 +1,29 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onBeforeMount } from 'vue'
 import { storeToRefs } from "pinia";
 import { useCardInfoStore } from "@/stores/card-info";
 import { useDeckMakeStore } from "@/stores/deck-make";
 
 const cardInfoStore = useCardInfoStore();
-const { cardInfo, cardInfoDisplay } = storeToRefs(cardInfoStore);
+const { cardInfo, cardInfoDisplay, leftDisabled, rightDisabled } = storeToRefs(cardInfoStore);
+const getCardInfoIndex = cardInfoStore.getCardInfoIndex
+const changeCardInfoCard = cardInfoStore.changeCardInfoCard
 
 const deckMakeStore = useDeckMakeStore();
-console.log(cardInfo.value);
+// console.log(cardInfo.value);
 const { selectedCards } = storeToRefs(deckMakeStore);
 
 const addCard = deckMakeStore.addCard
 const removeCard = deckMakeStore.removeCard
 const countCards = deckMakeStore.countCards
 
-const cardInfoDesc = computed(() => {
-    return cardInfo.value.effect
-    .replace(/<img[^>]*>/g, '')
-    .replace(/【(.*?)】/g, '<mark class="mark-4">【$1】</mark>')
-})
-console.log(cardInfoDesc.value);
+// 暫時註解掉，以便修改功能
+// const cardInfoDesc = computed(() => {
+//     return cardInfo.value.effect
+//     .replace(/<img[^>]*>/g, '')
+//     .replace(/【(.*?)】/g, '<mark class="mark-4">【$1】</mark>')
+// })
+// console.log(cardInfoDesc.value);
 
 // 卡片在牌組中的數量
 const cardCount = ref(0)
@@ -30,74 +33,80 @@ watch(selectedCards.value, () => {
     // console.log(cardCount.value);
 })
 
-const iconTextColor = computed(() => {
-    if(cardInfo.value.color == 'red'){
-        return `text-red-700`
-    }else if(cardInfo.value.color == 'blue'){
-        return `text-blue-700`
-    }else if(cardInfo.value.color == 'green'){
-        return `text-green-700`
-    }else if(cardInfo.value.color == 'yellow'){
-        return `text-yellow-700`
-    }else if(cardInfo.value.color == 'purple'){
-        return `text-purple-700`
-    }
-})
+// 動態更改顏色暫時註解掉，以便修改功能
+// const iconTextColor = computed(() => {
+//     if(cardInfo.value.color == 'red'){
+//         return `text-red-700`
+//     }else if(cardInfo.value.color == 'blue'){
+//         return `text-blue-700`
+//     }else if(cardInfo.value.color == 'green'){
+//         return `text-green-700`
+//     }else if(cardInfo.value.color == 'yellow'){
+//         return `text-yellow-700`
+//     }else if(cardInfo.value.color == 'purple'){
+//         return `text-purple-700`
+//     }
+// })
 
-const iconBgColor = computed(() => {
-    if(cardInfo.value.color == 'red'){
-        return `bg-red-200`
-    }else if(cardInfo.value.color == 'blue'){
-        return `bg-blue-200`
-    }else if(cardInfo.value.color == 'green'){
-        return `bg-green-200`
-    }else if(cardInfo.value.color == 'yellow'){
-        return `bg-yellow-200`
-    }else if(cardInfo.value.color == 'purple'){
-        return `bg-purple-200`
-    }
-})
+// const iconBgColor = computed(() => {
+//     if(cardInfo.value.color == 'red'){
+//         return `bg-red-200`
+//     }else if(cardInfo.value.color == 'blue'){
+//         return `bg-blue-200`
+//     }else if(cardInfo.value.color == 'green'){
+//         return `bg-green-200`
+//     }else if(cardInfo.value.color == 'yellow'){
+//         return `bg-yellow-200`
+//     }else if(cardInfo.value.color == 'purple'){
+//         return `bg-purple-200`
+//     }
+// })
 
-const iconShadowColor = computed(() => {
-    if(cardInfo.value.color == 'red'){
-        return `shadow-red-200/50`
-    }else if(cardInfo.value.color == 'blue'){
-        return `shadow-blue-200/50`
-    }else if(cardInfo.value.color == 'green'){
-        return `shadow-green-200/50`
-    }else if(cardInfo.value.color == 'yellow'){
-        return `shadow-yellow-200/50`
-    }else if(cardInfo.value.color == 'purple'){
-        return `shadow-purple-200/50`
-    }
-})
+// const iconShadowColor = computed(() => {
+//     if(cardInfo.value.color == 'red'){
+//         return `shadow-red-200/50`
+//     }else if(cardInfo.value.color == 'blue'){
+//         return `shadow-blue-200/50`
+//     }else if(cardInfo.value.color == 'green'){
+//         return `shadow-green-200/50`
+//     }else if(cardInfo.value.color == 'yellow'){
+//         return `shadow-yellow-200/50`
+//     }else if(cardInfo.value.color == 'purple'){
+//         return `shadow-purple-200/50`
+//     }
+// })
 
-const textColor = computed(() => {
-    if(cardInfo.value.color == 'red'){
-        return `text-red-100`
-    }else if(cardInfo.value.color == 'blue'){
-        return `text-blue-100`
-    }else if(cardInfo.value.color == 'green'){
-        return `text-green-100`
-    }else if(cardInfo.value.color == 'yellow'){
-        return `text-yellow-100`
-    }else if(cardInfo.value.color == 'purple'){
-        return `text-purple-100`
-    }
-})
+// const textColor = computed(() => {
+//     if(cardInfo.value.color == 'red'){
+//         return `text-red-100`
+//     }else if(cardInfo.value.color == 'blue'){
+//         return `text-blue-100`
+//     }else if(cardInfo.value.color == 'green'){
+//         return `text-green-100`
+//     }else if(cardInfo.value.color == 'yellow'){
+//         return `text-yellow-100`
+//     }else if(cardInfo.value.color == 'purple'){
+//         return `text-purple-100`
+//     }
+// })
 
-const bgColor = computed(() => {
-    if(cardInfo.value.color == 'red'){
-        return `bg-red-700/50`
-    }else if(cardInfo.value.color == 'blue'){
-        return `bg-blue-700/50`
-    }else if(cardInfo.value.color == 'green'){
-        return `bg-green-700/50`
-    }else if(cardInfo.value.color == 'yellow'){
-        return `bg-yellow-700/50`
-    }else if(cardInfo.value.color == 'purple'){
-        return `bg-purple-700/50`
-    }
+// const bgColor = computed(() => {
+//     if(cardInfo.value.color == 'red'){
+//         return `bg-red-700/50`
+//     }else if(cardInfo.value.color == 'blue'){
+//         return `bg-blue-700/50`
+//     }else if(cardInfo.value.color == 'green'){
+//         return `bg-green-700/50`
+//     }else if(cardInfo.value.color == 'yellow'){
+//         return `bg-yellow-700/50`
+//     }else if(cardInfo.value.color == 'purple'){
+//         return `bg-purple-700/50`
+//     }
+// })
+
+// const handle
+onBeforeMount(() => {
+    
 })
 
 onMounted(() => {
@@ -108,14 +117,15 @@ onMounted(() => {
 <template>
     <section class="fixed top-0 left-0 w-screen h-screen z-[100] grid overflow-y-auto overflow-x-hidden md:overflow-hidden backdrop-blur place-content-center">
         <div class="flex items-center gap-4 w-[80vw] 2xl:w-[70vw] h-[80vh]">
-            <button class="p-4 text-white rounded-full arrow bg-black/50 disabled:bg-black/30 disabled:text-white/20 hover:bg-cyan-500">
+            <button class="p-4 text-white rounded-full arrow bg-black/50 disabled:bg-black/30 disabled:text-white/20 hover:bg-cyan-500" @click="changeCardInfoCard('left')" :disabled="leftDisabled" >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="stroke-2 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path>
                 </svg>
             </button>
             <div class="card flex-none rounded-2xl relative p-0 w-4/12 overflow-hidden shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
                 <div class="absolute top-0 left-0 w-full h-full glossy z-2 mix-blend-lighten"></div>
-                <img class="flex-none object-cover w-full min-w-0 shadow-lg select-none rounded-card aspect-card default-transition bg-image" :src="cardInfo.cover" alt="" size="sm:100vw md:50vw lg:600px">
+                <!-- 動態帶入資料的版本 <img class="flex-none object-cover w-full min-w-0 shadow-lg select-none rounded-card aspect-card default-transition bg-image" :src="cardInfo.cover" alt="" size="sm:100vw md:50vw lg:600px"> -->
+                <img class="flex-none object-cover w-full min-w-0 shadow-lg select-none rounded-card aspect-card default-transition bg-image" src="https://jasonxddd.me:7001/imgproxy/uTz5Qc1RtmVq-UACufPxVQk-G0eFfKvKWXNGEImcyHc/rt:fill/w:0/h:0/g:no/el:1/f:png/bG9jYWw6Ly8vL0hPTF9XMTA0XzEyM1NTUC5wbmc.png" alt="" size="sm:100vw md:50vw lg:600px">
                 <button class="absolute bottom-0 p-4 text-white rounded-full md-arrow left-2 bg-black/50 disabled:bg-black/30 disabled:text-white/20 hover:bg-cyan-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="stroke-2 size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path>
                     </svg>
@@ -133,7 +143,8 @@ onMounted(() => {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="stroke-2 size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
                             </button>
                             <div class="text-white btn btn-sm bg-zinc-700">
-                                <span class="stroke-2 size-6 flex items-center justify-center">{{ cardCount }}</span>
+                                <!-- 動態帶入資料的版本 <span class="stroke-2 size-6 flex items-center justify-center">{{ cardCount }}</span> -->
+                                <span class="text-center stroke-2 size-6">0</span>
                             </div>
                             <button class="text-white btn btn-sm bg-zinc-700 hover:bg-red-400" @click="removeCard(cardInfo)" >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="stroke-2 size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"></path></svg>
@@ -154,22 +165,53 @@ onMounted(() => {
                     </div>
                     <div class="flex items-center mt-4 gap-x-2">
                         <div class="flex flex-col items-center justify-center w-16 gap-2">
-                            <div :class="['p-2', iconTextColor, iconBgColor, 'rounded-full', 'shadow-lg', iconShadowColor]">
+                            <div class="p-2 text-blue-700 bg-blue-200 rounded-full shadow-lg shadow-blue-200/50">
+                                <svg  class="size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
+                                </svg>
+                            </div>
+                            <!-- 動態資料部分 <div :class="['p-2', iconTextColor, iconBgColor, 'rounded-full', 'shadow-lg', iconShadowColor]">
                                 <svg v-if="cardInfo.typeTranslate === '角色' " class="size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"></path>
                                 </svg>
                                 <svg v-else-if="cardInfo.typeTranslate === '名場' " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-8"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path></svg>
                                 <svg v-else-if="cardInfo.typeTranslate === '事件' " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-8"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"></path></svg>
-                            </div>
-                            <p class="w-full text-xs text-center text-white truncate">{{ cardInfo.typeTranslate }}</p>
+                            </div> -->
+                            <p class="w-full text-xs text-center text-white truncate">角色</p>
+                            <!-- 動態帶入資料的版本 <p class="w-full text-xs text-center text-white truncate">{{ cardInfo.typeTranslate }}</p> -->
                         </div>
                         <div>
-                            <p class="font-mono text-xs text-zinc-300">{{ cardInfo.id }}</p>
+                            <!-- 動態帶入資料的版本 <p class="font-mono text-xs text-zinc-300">{{ cardInfo.id }}</p>
                             <h3 class="text-2xl font-bold text-white">{{ cardInfo.title }}</h3>
-                            <p class="text-zinc-300">{{ cardInfo.productName }}</p>
+                            <p class="text-zinc-300">{{ cardInfo.productName }}</p> -->
+                            <p class="font-mono text-xs text-zinc-300">HOL/W104-123SSP</p>
+                            <h3 class="text-2xl font-bold text-white">STELLAR into the GALAXY 星街すいせい</h3>
+                            <p class="text-zinc-300">#ホロライブプロダクション Vol.2</p>
                         </div>
                     </div>
                     <div class="flex flex-wrap items-center gap-2 mt-4">
+                        <div class="flex items-center">
+                            <span class="relative px-1 text-blue-100 rounded z-1 whitespace-nowrap bg-blue-700/50">等級</span>
+                            <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">3</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="relative px-1 text-blue-100 rounded z-1 whitespace-nowrap bg-blue-700/50">費用</span>
+                            <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">2</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="relative px-1 text-blue-100 rounded z-1 whitespace-nowrap bg-blue-700/50">魂傷</span>
+                            <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">2</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="relative px-1 text-blue-100 rounded z-1 whitespace-nowrap bg-blue-700/50">攻擊</span>
+                            <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">10000</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="relative px-1 text-blue-100 rounded z-1 whitespace-nowrap bg-blue-700/50">稀有度</span>
+                            <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">SSP</span>
+                        </div>
+                    </div>
+                    <!-- 動態帶入資料的版本 <div class="flex flex-wrap items-center gap-2 mt-4">
                         <div class="flex items-center">
                             <span :class="['relative', 'px-1', textColor, 'rounded', 'z-1', 'whitespace-nowrap', bgColor]">等級</span>
                             <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">{{ cardInfo.level }}</span>
@@ -190,7 +232,7 @@ onMounted(() => {
                             <span :class="['relative', 'px-1', textColor, 'rounded', 'z-1', 'whitespace-nowrap', bgColor]">稀有度</span>
                             <span class="bg-black/30 rounded-r pl-2 pr-1 -ml-1 whitespace-nowrap text-white text-center font-mono md:min-w-[2rem]">{{ cardInfo.rare }}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="flex items-center justify-around gap-2 mt-6 overflow-auto">
                         <button class="flex items-center rounded-full group default-transition bg-zinc-700 text-zinc-100 hover:bg-cyan-700 hover:text-cyan-100">
                             <div class="btn btn-sm default-transition bg-zinc-600 group-hover:bg-cyan-600">
@@ -254,7 +296,8 @@ onMounted(() => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-7">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m9 7.5 3 4.5m0 0 3-4.5M12 12v5.25M15 12H9m6 3H9m12-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
                             </svg>
-                            <h3 class="font-mono text-6xl font-bold">{{ cardInfo.price.number }}</h3>
+                            <h3 class="font-mono text-6xl font-bold">448000</h3>
+                            <!-- 動態帶入資料的版本 <h3 class="font-mono text-6xl font-bold">{{ cardInfo.price.number }}</h3> -->
                         </div>
                         <p class="mt-4 text-sm text-zinc-500 dark:text-zinc-300">於 2024-11-07 遊々亭價格更新</p>
                     </div>
@@ -314,7 +357,7 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <button class="p-4 text-white rounded-full arrow bg-black/50 disabled:bg-black/30 disabled:text-white/20 hover:bg-cyan-500">
+            <button class="p-4 text-white rounded-full arrow bg-black/50 disabled:bg-black/30 disabled:text-white/20 hover:bg-cyan-500" @click="changeCardInfoCard('right')" :disabled="rightDisabled" >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="stroke-2 size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path>
                 </svg>

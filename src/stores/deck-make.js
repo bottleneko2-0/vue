@@ -1,11 +1,11 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useCardInfoStore } from "./card-info";
+import { useCardInfoStore } from "@/stores/card-info";
 
 export const useDeckMakeStore = defineStore("deck-make", () => {
   const cardInfoStore = useCardInfoStore();
-  const getCardInfoAndShow = cardInfoStore.getCardInfoAndShow;
+  // const getCardInfoAndShow = cardInfoStore.getCardInfoAndShow;
 
   const selectedCards = ref([]);
   const editType = ref("CHECK_INFO");
@@ -97,12 +97,12 @@ export const useDeckMakeStore = defineStore("deck-make", () => {
   const checkTypeAndRunFunction = (card, cardIndex, deckIndex) => {
     if (editType.value === "CHECK_INFO") {
       console.log("查看卡片資訊");
-      console.log(
-        "卡片資訊:" + card,
-        "卡片索引值:" + cardIndex,
-        "牌組索引值:" + deckIndex
-      );
-      getCardInfoAndShow(card)
+      // console.log(
+        //   "卡片資訊:" + card.name,
+        //   "卡片索引值:" + cardIndex,
+      //   "牌組索引值:" + deckIndex
+      // );
+      cardInfoStore.getCardInfoAndShow(card);
     } else if (editType.value === "ADD_CARD") {
       addCard(card);
       switchSortMode();
@@ -260,10 +260,9 @@ export const useDeckMakeStore = defineStore("deck-make", () => {
 
   // 傳送給後端存入資料庫
   const sendDeckToDatabase = async (deckData) => {
-    
     console.log(deckData);
     const userToken = localStorage.getItem("token");
-    
+
     const res = await axios.post("http://localhost:3000/api/add-deck", {
       userToken,
       deckData,
@@ -297,6 +296,6 @@ export const useDeckMakeStore = defineStore("deck-make", () => {
     switchSortMode,
     handleSwitchBtnClick,
     sendDeckToDatabase,
-    countCards
+    countCards,
   };
 });

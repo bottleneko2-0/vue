@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
 
@@ -6,6 +6,7 @@ export const useCardSeriesStore = defineStore("card-series", () => {
   
   const serieslastReleaseTime = ref("");
   const seriesCode = ref("");
+  const seriesInfo = ref("");
   const seriesCardList = ref([]);
 
   // リコリス測試用資料
@@ -39,7 +40,14 @@ export const useCardSeriesStore = defineStore("card-series", () => {
   // 獲取指定系列所有卡牌資訊;
   const getSeriesCards = async (seriesId) => {
     try {
-      console.log("獲取真正的系列卡牌");
+      const seriesRes = await axios.get(`http://localhost:3000/api/serise`);
+      const selectedSeries = seriesRes.data.find((series) => {
+        return series.id == seriesId;
+      })
+      console.log(selectedSeries);
+      seriesInfo.value = selectedSeries;
+      console.log(seriesInfo.value);
+      
       const res = await axios.get(`http://localhost:3000/api/serise/${seriesId}`);
         // console.log(res.data);
       res.data.forEach((card) => {
@@ -85,6 +93,7 @@ export const useCardSeriesStore = defineStore("card-series", () => {
     saveLastViewSeries,
     getLastViewSeries,
     seriesTestData,
-    getTestSeries
+    getTestSeries,
+    seriesInfo,
   };
 });

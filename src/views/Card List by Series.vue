@@ -110,7 +110,7 @@
                         </div>
                         <h2 class="font-size30 color-white h2-padding">之前查看系列</h2>
                         <section class="show-card">
-                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors">
+                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors" @click.prevent="handleSeries(card.id)" >
                                     <div>
                                         <img :src ="card.cover || '/src/img/cover.png'" alt="">
                                     </div>
@@ -151,7 +151,7 @@
                                     <p class="color-a1">{{ seriesTestData.sellAt }}</p>
                                 </div>
                             </RouterLink> -->
-                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors">
+                            <a v-for="card in cardSeries" :key="card.id" href="#" class="url transition-colors" @click.prevent="handleSeries(card.id)" >
                                     <div>
                                         <img :src ="card.cover || '/src/img/cover.png'" alt="">
                                     </div>
@@ -363,24 +363,16 @@ import { ref, onMounted } from 'vue';
 import { useCardSeriesStore } from "@/stores/card-series";
 import { storeToRefs } from "pinia";
 import axios from "axios";
+import { useRouter } from 'vue-router'
+
+const router = useRouter(); 
 
 //     export default {
 //     data(){
-//         const cardSeriesStore = useCardSeriesStore();
-//         const { seriesTestData } = storeToRefs(cardSeriesStore);
-//         return{
-//             getSeriesCards: cardSeriesStore.getSeriesCards,
-//             saveLastViewSeries: cardSeriesStore.saveLastViewSeries,
-//             seriesTestData,
-//             getTestSeries: cardSeriesStore.getTestSeries
-//         }
+//         
 //     },
 //     methods: {
-//     async handleSeries(seriesId){
-//         await this.getSeriesCards(seriesId);
-//         // console.log("成功獲取資料，執行跳轉至CardSeriesPage");
-//         this.saveLastViewSeries(seriesId);
-//         // 點擊系列後獲取該系列ID，作為參數調用card-series store裡獲取指定系列資料的function拿到資料，然後順便跳轉到CardSeriesPage，並將現在瀏覽的系列ID存在localstorage
+//     
 //     },
 //     toggleArrow(event) {
 //       const button = event.currentTarget;
@@ -436,6 +428,17 @@ const fetchCardseries = async () => {
         error.value = '獲取系列卡表資料失敗' + err.message
     }
 };
+
+const cardSeriesStore = useCardSeriesStore();
+
+const getSeriesCards = cardSeriesStore.getSeriesCards;
+const saveLastViewSeries = cardSeriesStore.saveLastViewSeries;
+    
+const handleSeries = async(seriesId) => {
+    router.push('/card-series');
+    await getSeriesCards(seriesId);
+    saveLastViewSeries(seriesId);
+}
 
 onMounted(() => {
     fetchCardseries();
