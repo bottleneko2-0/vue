@@ -1,3 +1,107 @@
+<script setup>
+import { onBeforeMount, ref, onMounted } from 'vue'
+import axios from 'axios'
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
+Fancybox.bind('[data-fancybox="daily-card"]', {});
+
+const seriesSortTitleArr = ref([])
+const seriesSortCardsArr = ref([])
+const dateSortTitleArr = ref([])
+const dateSortCardsArr = ref([])
+const thisCategory = ref('SERIES')
+
+const getDailyCards = async (category) => {
+
+    seriesSortTitleArr.value = []
+    seriesSortCardsArr.value = []
+    dateSortTitleArr.value = []
+    dateSortCardsArr.value = []
+
+    const { data } = await axios.get("http://localhost:3000/api/daily-card")
+    // console.log(data);
+    
+    // 取出系列
+    data.forEach((item) => {
+        if(!seriesSortTitleArr.value.find((title) => {
+            return title == item.series
+        })){
+            seriesSortTitleArr.value.push(item.series)
+        }
+    })
+    
+    for(let i = 0; i < seriesSortTitleArr.value.length; i++){
+        const cards = data.filter((item) => {
+            return item.series == seriesSortTitleArr.value[i]
+        })
+        seriesSortCardsArr.value.push(cards)
+    }
+
+    const sortArr = ref([]) 
+     // 取出日期
+    data.forEach((item) => {
+        const year = item.today.slice(0, 4)
+        const month = item.today.slice(4, 6)
+        const day = item.today.slice(6).length == 1 ? `0${item.today.slice(6)}` : item.today.slice(6, 8)
+        const date = `${year}${month}${day}`
+        
+        if(!sortArr.value.find((title)=> {
+            return title == date
+        })){
+            sortArr.value.push(date)
+        }
+    })
+     // 取出加上.的日期
+    data.forEach((item) => {
+        
+        const year = item.today.slice(0, 4)
+        const month = item.today.slice(4, 6)
+        const day = item.today.slice(6).length == 1 ? `0${item.today.slice(6)}` : item.today.slice(6, 8)
+        const date = [year, month, day].join(".")
+        
+        if(!dateSortTitleArr.value.find((title)=> {
+            return title == date
+        })){
+            dateSortTitleArr.value.push(date)
+        }
+    })
+    // console.log("目前區塊標題:", dateSortTitleArr.value);
+     // 取出各日期的卡片
+    for(let i = 0; i < sortArr.value.length; i++){
+        const cards = data.filter((item) => {
+            return item.today == sortArr.value[i]
+        })
+        dateSortCardsArr.value.push(cards)
+    }
+    // console.log("目前區塊卡片:", dateSortCardsArr.value);
+    
+}
+
+const switchCategory = (category) => {
+    if(category == "SERIES"){
+        thisCategory.value = "SERIES"
+    }else if(category == "DATE"){
+        thisCategory.value = "DATE"
+    }
+}
+
+const goToSection = (target) => {
+        console.log("滾動到", target);    
+        document.querySelector(`[data-id="${ target }"]`).scrollIntoView({behavior: "smooth"})    
+    }
+
+
+onBeforeMount(async() => {
+    await getDailyCards()
+})
+
+onMounted(()=> {
+    
+
+})
+
+</script>
 <template>
     <body class="overflow-hidden bg-black root-container">
         <header class="z-10 h-16 md:mt-2 md:mr-2 header-bg md:rounded-t-2xl">
@@ -129,55 +233,41 @@
                     <label for="list-switch" class="list-switch w-[6.5rem] h-fit p-1 bg-zinc-600/80 text-zinc-200 default-transition rounded-full mb-2.5 relative z-10">
                         <span class="hide">Close</span><svg data-v-896c8a0b="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="rotate-180 stroke-2 size-6 default-transition"><path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"></path></svg>
                     </label>
-                    <ul class="date-list absolute z-10 top-0 right-0 bottom-0 default-transition w-[6.5rem] left-0 sticky top-16 md:top-[4.5rem] relative h-fit max-h-[calc(100vh-14rem)] md:max-h-[calc(100vh-12rem)] bg-zinc-600/80 rounded-xl">
-                        <li><a href="#" class="date">2024.11.09</a></li>
-                        <li><a href="#" class="date text-cyan-300">2024.11.08</a></li>
-                        <li><a href="#" class="date">2024.11.07</a></li>
-                        <li><a href="#" class="date">2024.11.06</a></li>
-                        <li><a href="#" class="date">2024.11.05</a></li>
-                        <li><a href="#" class="date">2024.11.04</a></li>
-                        <li><a href="#" class="date">2024.11.03</a></li>
-                        <li><a href="#" class="date">2024.11.02</a></li>
-                        <li><a href="#" class="date">2024.11.01</a></li>
-                        <li><a href="#" class="date">2024.10.31</a></li>
+                    <ul v-if="thisCategory == 'SERIES'" class="date-list absolute z-10 top-0 right-0 bottom-0 default-transition w-[6.5rem] left-0 sticky top-16 md:top-[4.5rem] relative bg-zinc-600/80 rounded-xl">
+                        <li v-for="(title, index) in seriesSortTitleArr" @click.prevent="goToSection(title)" >
+                            <a :href="`#${title}`" class="date line-clamp-1">{{ title }}</a>
+                        </li>
+                    </ul>
+                    <ul v-if="thisCategory == 'DATE'" class="date-list absolute z-10 top-0 right-0 bottom-0 default-transition w-[6.5rem] left-0 sticky top-16 md:top-[4.5rem] relative bg-zinc-600/80 rounded-xl">
+                        <li v-for="(title, index) in dateSortTitleArr" @click.prevent="goToSection(title)" >
+                            <a :href="`#${title}`" class="date line-clamp-1">{{ title }}</a>
+                        </li>
                     </ul>
                     <div class="content-block absolute -top-2 z-1 mt-2 flex flex-col gap-4 md:gap-6 default-transition ml-[calc(6.5rem+1rem)]">
-                        <div id="tab-ghost" class="absolute rounded-lg shadow will-change-auto bg-gradient-to-r from-lime-500 to-cyan-500 shadow-sky-500/50" data-flip-id="auto-2"></div>
+                        <div id="tab-ghost" :class="{'tab-ghost-series': thisCategory == 'SERIES' , 'tab-ghost-date': thisCategory == 'DATE' }" class="absolute rounded-lg shadow will-change-auto bg-gradient-to-r from-lime-500 to-cyan-500 shadow-sky-500/50" data-flip-id="auto-2"></div>
                         <nav class="relative flex flex-wrap items-center gap-2 rounded-lg">
-                            <button id="tab-series" class="flex items-center gap-2 py-1 pl-1 pr-2 rounded-lg will-change-auto bg-black/50 hover:bg-zinc-800/50 text-zinc-200">
+                            <button id="tab-series" class="flex items-center gap-2 py-1 pl-1 pr-2 text-white rounded-lg will-change-auto" @click="switchCategory('SERIES')" >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none stroke-2 size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"></path>
                                 </svg>
                                 <span class="text-sm font-bold select-none whitespace-nowrap">系列</span>
                             </button>
-                            <button id="tab-today" class="flex items-center gap-2 py-1 pl-1 pr-2 text-white rounded-lg will-change-auto" data-flip-id="auto-1" style="translate: none; rotate: none; scale: none;">
+                            <button id="tab-today" class="flex items-center gap-2 py-1 pl-1 pr-2 text-white rounded-lg will-change-auto" data-flip-id="auto-1" style="translate: none; rotate: none; scale: none;" @click="switchCategory('DATE')" >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none stroke-2 size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z"></path>
                                 </svg>
                                 <span class="text-sm font-bold select-none whitespace-nowrap">日期</span>
                             </button>
-                            <h3 data-v-896c8a0b="" class="font-bold text-red-500">＊僅顯示最近10天的資料內容</h3>
+                            <h3 data-v-896c8a0b="" class="font-bold text-red-500">＊僅顯示最近30天的資料內容</h3>
                         </nav>
-                        <section class="relative py-0 grid-container z-1">
-                            <h3 id="2024.11.08" class="text-xl font-bold text-white col-span-full">2024.11.08</h3>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
+                        <section v-if="thisCategory == 'SERIES'" class="relative py-0 grid-container z-1" v-for="(title, i) in seriesSortTitleArr" :data-id="title" >
+                            <h3 id="2024.11.08" class="text-xl font-bold text-white col-span-full">{{ title }}</h3>
+                            <div class="card" v-for="card in seriesSortCardsArr[i]" >
+                                <img :src="card.image" class="select-none daily-card rounded-xl" data-fancybox="daily-card" :data-src="card.image" :data-caption="`${card.series} - ${card.sell}`" >
                             </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
-                            </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
-                            </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
-                            </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
-                            </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
-                            </div>
-                            <div class="card">
-                                <img data-v-896c8a0b="" src="https://ws-tcg.com/wordpress/wp-content/images/today_card/20241108_go01.png" class="select-none daily-card rounded-xl" data-fancybox="daily" data-caption="ブースターパック 「Re:ゼロから始める異世界生活」Vol.3 - ▼2024/11/22（金）発売">
+                        </section>
+                        <section v-if="thisCategory == 'DATE'" class="relative py-0 grid-container z-1" v-for="(title, i) in dateSortTitleArr" :data-id="title" >
+                            <h3 id="2024.11.08" class="text-xl font-bold text-white col-span-full">{{ title }}</h3>
+                            <div class="card" v-for="card in dateSortCardsArr[i]" >
+                                <img :src="card.image" class="select-none daily-card rounded-xl" data-fancybox="daily-card" :data-src="card.image" :data-caption="`${card.series} - ${card.sell}`" >
                             </div>
                         </section>
                     </div>
@@ -478,7 +568,22 @@ header {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
 }
 
-#tab-ghost {
+.tab-ghost-series {
+    translate: none; 
+    rotate: none; 
+    scale: none; 
+    padding: 0px; 
+    grid-area: 1 / 1 / 1 / 1; 
+    transition: none; 
+    position: absolute; 
+    width: 72px; 
+    height: 32px; 
+    top: 0px; 
+    left: 0px; 
+    transform: translate3d(0px, 0px, 0px);
+}
+
+.tab-ghost-date {
     translate: none; 
     rotate: none; 
     scale: none; 
@@ -502,6 +607,10 @@ header {
 
 .card {
     cursor: pointer;
+}
+
+.list-item:hover {
+    color: rgb(161 161 170);
 }
 
 @media screen and (min-width: 1440px) {
