@@ -345,6 +345,7 @@
 
 .deck-save {
   width: 100%;
+  max-height: calc(100vh);
   padding: 16px;
   display: flex;
   flex-direction: column;

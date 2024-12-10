@@ -22,6 +22,7 @@ import Findcard from "../components/Mycard/find-card.vue";
 import Remitcard from "../components/Mycard/remit-card.vue";
 import RemitCardNf from "../components/Mycard/remit-cardnf.vue";
 import AuthSuccess from "../views/AuthSuccess.vue";
+import PaypalCheckout from "../components/PaypalCheckout.vue";
 
 
 const router = createRouter({
@@ -137,6 +138,11 @@ const router = createRouter({
       path: '/auth-success',
       name: 'auth-success',
       component: AuthSuccess
+    },
+    {
+      path: '/paypal-checkout',
+      name: 'paypal-checkout',
+      component: PaypalCheckout
     }
 
   ],

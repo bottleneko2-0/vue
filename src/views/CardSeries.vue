@@ -7,6 +7,7 @@ import { useDeckMakeStore } from "@/stores/deck-make";
 import { useCardInfoStore } from "@/stores/card-info";
 import Swal from 'sweetalert2'
 import { useCardFilterStore } from "@/stores/card-filter"
+import PaypalCheckout from "../components/PaypalCheckout.vue";
 
 // 引入CardFilterStore並使用
 const cardFilterStore = useCardFilterStore();
@@ -619,12 +620,12 @@ const handleApplyStatus = () => {
           <button id="sidebar-footer-active" v-if="selectedCards.length > 0 && settingDeckStatus === false" @click="nextStep">
             <span>下一步<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg></span>
           </button>
-          <button id="sidebar-footer-active" v-else-if="settingDeckStatus === true" @click="finalStep">
-            <span>完成<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg></span>
-          </button>
-          <button v-else>
-            <span>下一步<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg></span>
-          </button>
+          <div id="sidebar-footer-active" v-if="settingDeckStatus === true" >
+            <button @click="finalStep">
+              <span>完成<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg></span>
+            </button>
+          </div>
+          <PaypalCheckout v-if="settingDeckStatus === true" />
         </footer>
       </section>
     </nav>
