@@ -22,6 +22,7 @@ import Findcard from "../components/Mycard/find-card.vue";
 import Remitcard from "../components/Mycard/remit-card.vue";
 import RemitCardNf from "../components/Mycard/remit-cardnf.vue";
 import AuthSuccess from "../views/AuthSuccess.vue";
+import MyArticle from "../views/MyArticle.vue";
 
 
 const router = createRouter({
@@ -137,6 +138,11 @@ const router = createRouter({
       path: '/auth-success',
       name: 'auth-success',
       component: AuthSuccess
+    },
+    {
+      path: "/social/my",
+      name: "my-article",
+      component: MyArticle
     }
 
   ],
