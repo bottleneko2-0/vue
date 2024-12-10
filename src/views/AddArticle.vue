@@ -181,49 +181,59 @@
 </template>
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 export default {
   data() {
     return {
       title: '',  
       content: '', 
-      username: '',
+      userId: null, 
     };
   },
   mounted() {
-    this.username = localStorage.getItem('username');
-    if (!this.username) {
+    
+    this.userId = parseInt(localStorage.getItem('user_id'), 10); 
+
+    if (!this.userId) {
       alert('請先登入！');
     }
   },
   methods: {
-    
     async submitArticle() {
       try {
-        // const userToken = this.userToken
-        if (!this.username) {
+        if (!this.userId) {
           alert('用户未登录，请先登录');
           return;
         }
+
         const response = await axios.post(
-            'http://localhost:3000/article/articles',
-            {
-                username: this.username,
-                title: this.title,
-                content: this.content
-            }
+          'http://localhost:3000/article/articles',
+          {
+            user_id: this.userId, 
+            title: this.title,
+            content: this.content,
+          }
         );
-        console.log(response.data)
+
+        // console.log(response.data);
         
+        Swal.fire({
+            icon: 'success',
+            title: '成功',
+        });
+
         this.title = '';
         this.content = '';
-        alert('文章新增成功!');
       } catch (error) {
         console.error('新增文章失敗:', error);
-        alert('新增文章失敗!');
+        Swal.fire({
+            icon: 'error',
+            title: '新增文章失敗',
+        });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

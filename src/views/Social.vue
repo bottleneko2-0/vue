@@ -49,8 +49,8 @@
             <div class="header-container">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input class="search" type="text" placeholder="我想找找....?">
-                    <i id="xx" class="fa-solid fa-x"></i>
+                    <input v-model="searchQuery" @keyup.enter="handleEnter" class="search" type="text" placeholder="我想找找....?">
+                    <svg @click="clearSearch" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="flex-none size-5 stroke-2 cursor-pointer text-zinc-700"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path></svg>
                 </div>
                 <button class="filter">
                     <i class="fa-regular fa-window-restore"></i>
@@ -81,27 +81,20 @@
                 </div>
             </div>
             <section class="flex-item-hidden">
-                <button class="user-button">
+                <button  
+                    v-for="(item, index) in socialHistory"
+                    :key="index" 
+                    class="user-button" 
+                    @click="handleHistoryClick(item.searchQuery)"
+                >
                     <a href="#">
                         <div class="user-link">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <span>XXX</span>
+                            <span>{{ item.searchQuery }}</span>
                         </div>
                         <div class="user-link">
                             <i class="fa-regular fa-window-restore"></i>
-                            <span>XXX</span>
-                        </div>
-                    </a>
-                </button>
-                <button class="user-button">
-                    <a href="#">
-                        <div class="user-link">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <span>XXX</span>
-                        </div>
-                        <div class="user-link">
-                            <i class="fa-regular fa-window-restore"></i>
-                            <span>XXX</span>
+                            <span>-</span>
                         </div>
                     </a>
                 </button>
@@ -109,26 +102,28 @@
             <h2 class="title">
                 搜尋結果
                 <br>
-                <span class="subtitle">
-                    一共有XXXX結果
-                </span>
+                <span class="subtitle">一共有 {{ searchResultCount }} 結果</span>
             </h2>
             <section class="card-area">
-                <a v-for="article in articles" :key="article.id" href="#" class="card-link">
+                <a v-for="article in filteredArticles" 
+                    :key="article.post_code" 
+                    :href="'/social/' + article.post_code" 
+                    class="card-link"
+                >
                     <div class="card-img">
                         <img src="/src/img/麻衣.png" alt="">
                     </div>
                     <div class="card-user">
                         <div class="card-user-flex">
                             <div class="card-user-img">
-                                <img src="/src/img/麻衣.png" alt="">
+                                <img :src="article.users.picture" alt="用戶頭像">
                             </div>
                             <div class="card-user-p">
-                                <p>{{ article.username }}</p>
+                                <p>{{ article.users.username }}</p>
                                 <div class="date-container">
                                     <p class="date">{{ formatDate(article.created_at) }}</p>
                                     <i class="fa-solid fa-globe"></i>
-                                    <p class="card-code">UjsZ4</p>
+                                    <p class="card-code">{{ article.post_code }}</p>
                                     <div class="chat">
                                         <i class="fa-regular fa-comment"></i>
                                         <p>1</p>
@@ -201,25 +196,81 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      articles: []
+      articles: [],
+      searchQuery: '',
+      filteredArticles:[],
+      socialHistory: JSON.parse(localStorage.getItem('socialHistory')) || [],
     };
   },
   async created() {
     try {
       const response = await axios.get('http://localhost:3000/article/articles');
       this.articles = response.data; 
+      this.filteredArticles = this.articles;
     } catch (error) {
       console.error('獲取文章列表失敗', error);
     }
   },
+  computed: {
+    searchResultCount() {
+      return this.filteredArticles.length;
+    },
+  },
   methods:{
-  formatDate(date) {
-      if (!date) {
+    formatDate(date) {
+        if (!date) {
         return '';
+        }
+        return date.split('T')[0];
+    },
+    handleEnter() {
+      console.log('當前 searchQuery:', this.searchQuery);
+      this.searchArticles();
+      this.addSearchHistory();
+      this.searchQuery = '';
+    },
+    addSearchHistory() {
+      console.log('addSearchHistory 被调用');
+      if (this.searchQuery.trim()) {
+        const newHistory = { searchQuery: this.searchQuery.trim() };       
+        const existingIndex = this.socialHistory.findIndex(
+        (item) => item.searchQuery === newHistory.searchQuery
+        );
+
+        if (existingIndex !== -1) {
+        this.socialHistory.splice(existingIndex, 1);
+        }
+        this.socialHistory = [newHistory, ...this.socialHistory];
+        localStorage.setItem('socialHistory', JSON.stringify(this.socialHistory));
+        console.log('當前搜尋紀錄:', this.socialHistory);
+        } else {
+            console.log('searchQuery 為空，未添加搜尋紀錄');
+        }
+    },
+    
+
+    searchArticles() {
+      if (!this.searchQuery.trim()) {
+        this.filteredArticles = this.articles;
+      } else {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredArticles = this.articles.filter(article =>
+        article.title.toLowerCase().includes(query) ||
+        article.content.toLowerCase().includes(query) ||
+        article.post_code.includes(query)
+      );
       }
-      return date.split('T')[0];
-    }
-}
+    },
+    handleHistoryClick(searchQuery) {
+        this.searchQuery = searchQuery;
+        this.searchArticles(); 
+        this.addSearchHistory();
+    },
+    clearSearch() {
+        this.searchQuery = ''; 
+        this.filteredArticles = this.articles;
+    },
+  },
 };
 </script>
 <style scoped>
@@ -244,6 +295,7 @@ export default {
 
 
     .sidebar{
+        position: fixed;
         width: 238px;
         height: 100vh;
         background-color: black;
@@ -344,6 +396,7 @@ export default {
         width: 100%;
         height: 100%;
         position: relative;
+        background-color: #121212;
     }
 
     .header-container {
@@ -354,6 +407,7 @@ export default {
         position: fixed;
         display: flex;
         flex-wrap: wrap;
+        gap:10px;
         z-index: 1;
     }
 
@@ -370,6 +424,15 @@ export default {
         position: fixed;
         top: 0;
         margin:14px 0 0 24px;
+        position: relative;
+    }
+
+    .search-container svg {
+        cursor: pointer;
+        width:22px;
+        height: 22px;
+        position: absolute;
+        right: 10px;
     }
 
     .search-container i::before,
@@ -397,7 +460,7 @@ export default {
         width: 120px;
         border-radius: 20px;
         height: 36px;   
-        transform: translate(303px,14px);
+        transform: translateY(14px);
         font-weight: 700;
         cursor: pointer;
     }
@@ -488,15 +551,21 @@ export default {
         box-sizing: border-box;
         padding: 9px;
         border: 1px solid #27272A;
-        background-color: #121212;
+        background-color: rgb(24,24,17);
         color: #D4D4D8;
-        width: 100%;
+        width: 80px;
         border-radius: 10px;
         display: flex;
+        cursor: pointer;
     }
 
     .user-button:hover {
         background-color: #27272A;
+    }
+
+    .user-link {
+        display: flex;
+        gap:5px;
     }
 
     .user-link i {
@@ -811,7 +880,7 @@ export default {
         }
     }
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 1200px) {
         .sidebar-container {
             display: none;
         }
@@ -852,7 +921,7 @@ export default {
         }
 
         .card-area {
-            grid-template-columns: repeat(4, minmax(198px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
         }
 
         .footer-nav {
@@ -865,12 +934,6 @@ export default {
 
         .chat {
             left: 85%;    
-        }
-    }
-
-    @media screen and (max-width: 1024px) {
-        .card-area {
-            grid-template-columns: repeat(3,  1fr);
         }
     }
 

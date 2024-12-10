@@ -14,7 +14,7 @@ import Login from "../views/Login.vue";
 import Signup from "../views/Signup.vue";
 import LoginHomePageView from "@/views/LoginHomepage.vue";
 import CardSeries from "@/views/CardSeries.vue";
-import Carddeck from "../views/Carddeck.vue";
+import Post from "../views/Carddeck.vue";
 import AddArticle from "../views/AddArticle.vue";
 import Social from "../views/Social.vue";
 
@@ -94,9 +94,10 @@ const router = createRouter({
       component: CardSeries
     },
     {
-      path: "/carddeck",
-      name: "carddeck",
-      component: Carddeck
+      path: "/social/:post_code",
+      name: "post",
+      component: Post,
+      props: true, 
     },
     {
       path: "/add-article",
