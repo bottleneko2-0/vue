@@ -130,6 +130,16 @@ export default {
 
                 if (!userToken) {
                     console.error('User token is missing');
+                    Swal.fire({
+                        title: "請先登入",
+                        text: "留言功能需要登入才能使用。",
+                        icon: "warning",
+                        confirmButtonText: "確定",
+                        }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'http://localhost:5173/login';
+                    }
+                });
                     return;
                 }
 
