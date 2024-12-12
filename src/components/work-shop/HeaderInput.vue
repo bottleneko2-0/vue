@@ -71,9 +71,11 @@
 
 <style>
 .header-container {
+    width: 100%;
     display: flex;
     padding: 16px;
     height: 64px;
+    box-sizing: border-box;
 }
 
 .Top-bar{
@@ -476,6 +478,15 @@
     padding: 0;
     height: 20px;
 }
+@media (width < 768px) {
+    .login {
+
+        display: none;
+        
+}
+}
+
+
 </style>
 
 <style src="@/assets/css/work-shop/page-control-rwd.css" scoped></style>

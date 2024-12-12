@@ -321,7 +321,7 @@ import router from '@/router'
 }
 
 .work-shop-header {
-  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -577,12 +577,12 @@ import router from '@/router'
 
 .grid-card{
     display: grid;
-    grid-template-columns: repeat(7,1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 1.5rem;
     margin: 20px 0;
     box-sizing: border-box;
-    justify-items: start;
-    width: 85%;
+    /* justify-items: start; */
+    /* width: 85%; */
 }
 
 
@@ -624,13 +624,14 @@ import router from '@/router'
     display: inline-block;
     background-color: #18181b;
     border-radius: 5%;
-    width: 160px;
+    /* width: 160px; */
+    box-sizing: border-box;
 }
 
 .url img {
     border-radius: 10%;
     width: 100%; 
-    position: relative;
+    
 }
 
 .url button {
@@ -764,19 +765,8 @@ import router from '@/router'
     opacity: 0.6;
 }
 
-@media (width > 1339px) {
-    .grid-card{
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        
-    }
 
-    .url img{
-    border-radius: 10%;
-    width: 100%;
-}
-}
-
-@media (width < 1199px) {
+@media (width < 1200px) {
     .show-card{
         padding: 0px;
         margin: 0;
@@ -800,9 +790,16 @@ import router from '@/router'
     
 }
 
+@media (width < 1024px) {
+    .grid-card{
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
 
 
-    @media (width <767px) {
+
+    @media (width < 768px) {
+  
     
     .grid-card{
         grid-template-columns: repeat(2,minmax(0,1fr));
