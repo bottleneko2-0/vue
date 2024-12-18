@@ -78,32 +78,20 @@
       </div>
       <section class="title-area">
          <div class="title-area-container">
-              <button class="upload-btn" @click="handleButtonClick">
-                  <svg v-if="!imageUrl" data-v-b086c574="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-20 w-20"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>
-                  
-                  <img v-if="imageUrl" :src="imageUrl" alt="預覽圖片" class="preview-image" />
-                  <input
-                    type="file"
-                    class="file-input"
-                    @change="handleFileUpload"
-                    accept="image/*"
-                    ref="fileInput"
-                 />
-                 <svg v-if="imageUrl" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-  </svg>
-                 
-              </button>
+              <button class="upload-btn" alt="">
+                  <svg data-v-b086c574="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-20 w-20"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>
+                  <img :src="deckData.deck_cover"  alt="">
+               </button>
               <div class="add-section">
                   <div class="add-article">
                       <svg data-v-b086c574="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5 md:size-6 flex-none"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"></path></svg>
                       <p>新增文章</p>
                   </div>
-                  <input v-model="title" class="enter-title" type="text" placeholder="請輸入標題">
+                  <input v-model="title" class="enter-title" type="text" >
                   <div class="card-select-area">
                       <button class="card-select-btn">
                           <svg data-v-b086c574="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5 md:size-6 flex-none"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"></path></svg>
-                          <p>選擇牌組</p>
+                          <p> {{ deckData.deck_name }} </p>
                       </button>
                       <div class="cannot-change">
                           <p>非必填，但新增文章後將無法更改牌組內容</p>
@@ -197,94 +185,78 @@ import axios from 'axios';
 import Swal from 'sweetalert2'
 
 export default {
- data() {
-   return {
-     title: '',  
-     content: '', 
-     // user_id: null,
-     token: null, 
-     imageUrl: null,
-     uploadedImage: null,
-   };
- },
- mounted() {
+  data() {
+    return {
+      deckData: {
+        deck_name: '',
+        deck:[],
+      },
+      title: '',  
+      content: '', 
+      token: null, 
+    };
+  },
 
-  this.token = localStorage.getItem('token');
-   if (!this.token) {
-     alert('请先登录！');
-   }
- },
- methods: {
-   async submitArticle() {
-     if (!this.token) {
-         alert('用户未登录，请先登录');
-         return;
-       }
-     try {
-       
-        const formData = new FormData();
-        formData.append('title', this.title); 
-        formData.append('content', this.content); 
+ 
+  mounted() {
+    this.token = localStorage.getItem('token');
+    this.fetchDeckData();
+  },
+
+  methods: {
+    async fetchDeckData() {
+      const deckId = this.$route.params.deck_id;
+      try {
+        const response = await axios.get(`http://localhost:3000/api/deck-page/${deckId}`);
+        this.deckData = response.data;
+        this.title = this.deckData.deck_name || '';
         
-        if (this.uploadedImage) {
-           formData.append('picture', this.uploadedImage); 
+        if (!Array.isArray(this.deckData.deck)) {
+            this.deckData.deck = [];
         }
+        this.id = this.deckData.id
+      } catch (error) {
+        console.error('獲取文章資料失敗', error);
+      }
+    },
+    async submitArticle() {
+      try {
 
-   
         const response = await axios.post(
-           'http://localhost:3000/api/articles', 
-           formData, 
-           {
-           headers: {
-              'Authorization': `Bearer ${this.token}`, 
-           },
-           }
+           'http://localhost:3000/api/decks',
+          {
+            title: this.title,
+            content: this.content,
+            deck_id: this.id,
+            post_picture: this.deckData.deck_cover,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`, 
+            },
+          }
         );
 
        
-       Swal.fire({
-           icon: 'success',
-           title: '成功',
-           showConfirmButton: false,
-           timer: 1000,
-       });
+        Swal.fire({
+          icon: 'success',
+          title: '成功',
+          showConfirmButton: false,
+          timer: 1000,
+        });
 
-       this.title = '';
-       this.content = '';
-       this.imageUrl= null,
-       this.uploadedImage = null;
-     } catch (error) {
-       console.error('新增文章失敗:', error);
-       Swal.fire({
-           icon: 'error',
-           title: '新增文章失敗',
-       });
-     }
-   },
-
-  handleButtonClick() {
-   if (this.imageUrl) {
-     this.imageUrl = null; 
-     this.uploadedImage = null;
-     this.$refs.fileInput.value = ""; // 重置 input 的值
-     event.preventDefault(); 
-   }
- },
-
- handleFileUpload(event) {
-   const file = event.target.files[0];
-   if (file) {
-     this.uploadedImage = file;
-     const reader = new FileReader();
-     reader.onload = (e) => {
-       this.imageUrl = e.target.result; // 設置圖片 URL
-     };
-     reader.readAsDataURL(file);
-   }
- },
-
-//   
-}
+        this.title = '';
+        this.content = '';
+        this.post_picture = null;
+      } catch (error) {
+        console.error('新增文章失敗:', error);
+        Swal.fire({
+          icon: 'error',
+          title: '新增文章失敗',
+        });
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -677,15 +649,17 @@ header {
   border: none;
   position: relative;
 }
-.preview-image {
-  width: 100%;         
-  height: 100%;        
-  object-fit: cover;   
-  border-radius: 10px; 
-  position: absolute;  
-  top: 0;
+
+.upload-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  position: absolute;
   left: 0;
+  top: 0;
 }
+
 
 
 .upload-btn svg {
@@ -700,16 +674,6 @@ header {
 .upload-btn:hover svg {
   visibility: visible;
   opacity: 1;
-}
-
-.file-input {
- position: absolute;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- opacity: 0;
- cursor: pointer;
 }
 
 .add-section {

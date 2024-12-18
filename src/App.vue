@@ -11,10 +11,10 @@ const { cardInfoDisplay } = storeToRefs(cardInfoStore);
 </script>
 
 <template>
-<div class="overflow-hidden bg-black root-container"> 
-    <SidebarGrid style="grid-area: sidebar;" /> 
+<!-- <div class="overflow-hidden bg-black root-container">  -->
+    <!-- <SidebarGrid style="grid-area: sidebar;" />  -->
     <router-view />
- </div>
+ <!-- </div> -->
 </template>
 
 <style scoped>

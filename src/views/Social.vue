@@ -111,7 +111,9 @@
                     class="card-link"
                 >
                     <div class="card-img">
-                        <img src="/src/img/麻衣.png" alt="">
+                        <img v-if="article.post_picture" 
+                            :src="article.post_picture" 
+                            :alt="article.title">
                     </div>
                     <div class="card-user">
                         <div class="card-user-flex">

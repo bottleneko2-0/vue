@@ -36,6 +36,7 @@ export default {
         groupedCards: [],
         toggleTableView: false,
         togglePriceView: false,
+        article: null,
         };
     },
     mounted() {
@@ -44,9 +45,16 @@ export default {
         this.fetchDeck();
     },
 
-    created() {
+    async created() {
         this.loggedInUserId = getUserIdFromToken(this.token);
         console.log("Logged in user ID:", this.loggedInUserId);
+        const postCode = this.$route.params.post_code;
+        try {
+            const response = await axios.get(`http://localhost:3000/api/articles/${postCode}`);
+            this.article = response.data; 
+        } catch (error) {
+            console.error('獲取文章資料失敗', error);
+        }
     },
     computed: {
         isLoggedIn() {
@@ -407,7 +415,13 @@ export default {
             } catch (error) {
                 console.error("Error toggling hate:", error.response || error.message);
             }
-        }
+        },
+        formatDate(date) {
+            if (!date) {
+            return '';
+            }
+            return date.split('T')[0];
+        },
     }
 }  
 </script>
@@ -470,7 +484,7 @@ export default {
                             <button class="page-btn next-btn">
                                 <svg data-v-3e737e76="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
                             </button>
-                            <h2>タイトルカップ in WGP2024 東京会場 優勝 牌組</h2>
+                            <h2>{{ article.title }}</h2>
                         </div>
                         <div class="btn-area">
                             <button class="social-btn-item social-btn1">
@@ -507,22 +521,22 @@ export default {
                 <section class="carddeck-information">
                     <div class="information-container">
                         <div class="carddeck-img">
-                            <img src="/src/img/麻衣.png" alt="">
+                            <img v-if="article.post_picture" 
+                            :src="article.post_picture" 
+                            :alt="article.title">
                         </div>
                         <div class="carddeck-data">
                             <p class="user-number"><svg data-v-b086c574="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="size-5 md:size-6 flex-none"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"></path></svg>&nbsp;8Vzcc</p>
-                            <div class="carddeck-name">
-                                <h1>タイトルカップ in WGP2024 東京会場 優勝 牌組</h1>
-                            </div>
+                            <h1>{{ article.title }}</h1>
                             <div class="data-container">
                                 <div class="user-link">
                                     <div class="user-img">
-                                        <img src="/src/img/麻衣.png" alt="">
+                                        <img :src="article.users.picture" alt="用戶頭像">
                                     </div>
                                     <span class="date-container">
-                                        <a href="#">XXXX</a>
+                                        <a href="#">{{ article.users.username }}</a>
                                         發布於
-                                        <span>2024-01-01</span>
+                                        <span>{{ formatDate(article.created_at) }}</span>
                                     </span>
                                 </div>
                                 <span class="data-item">
@@ -552,7 +566,7 @@ export default {
                                 <span>文章內容</span>
                             </div>
                             <div class="article-content">
-                                <p>123</p>
+                                <p>{{ article.content }}</p>
                             </div>
                         </div>
                         <!-- 留言區域 -->
@@ -1858,11 +1872,16 @@ export default {
     }
 
     .carddeck-data {
-        margin-top:18px;
+        /* margin-top:18px; */
         display: flex;
+        justify-content: end;
         flex-direction: column;
         gap: 8px;
     }
+
+    .carddeck-data h1 {
+       font-size: 72px;
+   }
 
     .user-number {
         font-size: 12px;
