@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref, onMounted } from 'vue'
+import { onBeforeMount, ref, onMounted, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
@@ -12,6 +12,8 @@ const seriesSortCardsArr = ref([])
 const dateSortTitleArr = ref([])
 const dateSortCardsArr = ref([])
 const thisCategory = ref('SERIES')
+const sections = ref([])
+const currentSection = ref('') // 紀錄目前所在內容標示
 
 const getDailyCards = async (category) => {
 
@@ -76,7 +78,7 @@ const getDailyCards = async (category) => {
         dateSortCardsArr.value.push(cards)
     }
     // console.log("目前區塊卡片:", dateSortCardsArr.value);
-    
+
 }
 
 const switchCategory = (category) => {
@@ -90,16 +92,51 @@ const switchCategory = (category) => {
 const goToSection = (target) => {
         console.log("滾動到", target);    
         document.querySelector(`[data-id="${ target }"]`).scrollIntoView({behavior: "smooth"})    
+}
+
+const observer = ref(null);
+
+const initializeObserver = () => {
+    // 斷開之前的觀察器
+    if (observer.value) {
+      observer.value.disconnect();
     }
 
+    const options = {
+      root: document.querySelector('.background'), 
+      rootMargin: '0px',
+      threshold: 0.1, // 當內容 10% 部分可見時觸發
+    };
+  
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.getAttribute('data-id');
+          currentSection.value = sectionId;
+        }
+      });
+    };
+  
+    observer.value = new IntersectionObserver(observerCallback, options);
+    const sections = document.querySelectorAll('[data-id]')
+  
+    sections.forEach(section => {
+      observer.value.observe(section);
+    });
+}
 
-onBeforeMount(async() => {
+// 監聽 thisCategory 的變化，重新初始化觀察器
+watch(thisCategory, async (newCategory, oldCategory) => {
+    await nextTick(); // 確保 DOM 已更新
+    initializeObserver();
+});
+
+onMounted(async ()=> {
     await getDailyCards()
-})
-
-onMounted(()=> {
+    await nextTick(); // 確保 DOM 已更新
     
-
+    // 設置 IntersectionObserver
+    initializeObserver();
 })
 
 </script>
@@ -159,22 +196,20 @@ onMounted(()=> {
                 <main class="relative content-container bg-base z-1">
                     <div class="px-4 content scroll-smooth scrollbar md:px-6">
                         <section class="main-container">
-                            <div class="sticky z-10 top-0 right-0 bottom-0 default-transition w-[6.5rem] left-0">
-                                <input type="checkbox" id="list-switch">
-                                <label for="list-switch" class="list-switch w-[6.5rem] h-fit p-1 bg-zinc-600/80 text-zinc-200 default-transition rounded-full mb-2.5 sticky top-0 z-10">
-                                    <span class="hide">Close</span><svg data-v-896c8a0b="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="rotate-180 stroke-2 size-6 default-transition"><path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"></path></svg>
-                                </label>
-                                <ul v-if="thisCategory == 'SERIES'" class="date-list default-transition w-[6.5rem] bg-zinc-600/80 rounded-xl">
-                                    <li v-for="(title, index) in seriesSortTitleArr" @click.prevent="goToSection(title)" >
-                                        <a :href="`#${title}`" class="date line-clamp-1">{{ title }}</a>
-                                    </li>
-                                </ul>
-                                <ul v-if="thisCategory == 'DATE'" class="date-list default-transition w-[6.5rem] bg-zinc-600/80 rounded-xl">
-                                    <li v-for="(title, index) in dateSortTitleArr" @click.prevent="goToSection(title)" >
-                                        <a :href="`#${title}`" class="date line-clamp-1">{{ title }}</a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <input type="checkbox" id="list-switch">
+                            <label for="list-switch" class="list-switch cursor-pointer w-[6.5rem] h-fit p-1 bg-zinc-600/80 text-zinc-200 default-transition rounded-full mb-2.5 fixed">
+                                <span class="hide">Close</span><svg data-v-896c8a0b="" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="rotate-180 stroke-2 size-6 default-transition"><path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"></path></svg>
+                            </label>
+                            <ul v-if="thisCategory == 'SERIES'" class="date-list default-transition w-[6.5rem] bg-zinc-600/80 rounded-xl fixed">
+                                <li v-for="(title, index) in seriesSortTitleArr" :key="title" @click.prevent="goToSection(title)" >
+                                    <a :href="`#${title}`" class="date line-clamp-1" :class="{ active: currentSection === title }">{{ title }}</a>
+                                </li>
+                            </ul>
+                            <ul v-if="thisCategory == 'DATE'" class="date-list default-transition w-[6.5rem] bg-zinc-600/80 rounded-xl fixed">
+                                <li v-for="(title, index) in dateSortTitleArr" :key="title" @click.prevent="goToSection(title)" >
+                                    <a :href="`#${title}`" class="date line-clamp-1" :class="{ active: currentSection === title }">{{ title }}</a>
+                                </li>
+                            </ul>
                             <div class="content-block absolute -top-2 z-1 mt-2 flex flex-col gap-4 md:gap-6 default-transition ml-[calc(6.5rem+1rem)]">
                                 <div id="tab-ghost" :class="{'tab-ghost-series': thisCategory == 'SERIES' , 'tab-ghost-date': thisCategory == 'DATE' }" class="absolute rounded-lg shadow will-change-auto bg-gradient-to-r from-lime-500 to-cyan-500 shadow-sky-500/50" data-flip-id="auto-2"></div>
                                 <nav class="relative flex flex-wrap items-center gap-2 rounded-lg">
@@ -190,13 +225,13 @@ onMounted(()=> {
                                     </button>
                                     <h3 data-v-896c8a0b="" class="font-bold text-red-500">＊僅顯示最近30天的資料內容</h3>
                                 </nav>
-                                <section v-if="thisCategory == 'SERIES'" class="relative py-0 grid-container z-1" v-for="(title, i) in seriesSortTitleArr" :data-id="title" >
+                                <section v-if="thisCategory == 'SERIES'" class="relative py-0 grid-container z-1" v-for="(title, i) in seriesSortTitleArr" :key="title" :data-id="title" ref="section">
                                     <h3 id="2024.11.08" class="text-xl font-bold text-white col-span-full">{{ title }}</h3>
                                     <div class="card" v-for="card in seriesSortCardsArr[i]" >
                                         <img :src="card.image" class="select-none daily-card rounded-xl" data-fancybox="daily-card" :data-src="card.image" :data-caption="`${card.series} - ${card.sell}`" >
                                     </div>
                                 </section>
-                                <section v-if="thisCategory == 'DATE'" class="relative py-0 grid-container z-1" v-for="(title, i) in dateSortTitleArr" :data-id="title" >
+                                <section v-if="thisCategory == 'DATE'" class="relative py-0 grid-container z-1" v-for="(title, i) in dateSortTitleArr" :key="title" :data-id="title" ref="section">
                                     <h3 id="2024.11.08" class="text-xl font-bold text-white col-span-full">{{ title }}</h3>
                                     <div class="card" v-for="card in dateSortCardsArr[i]" >
                                         <img :src="card.image" class="select-none daily-card rounded-xl" data-fancybox="daily-card" :data-src="card.image" :data-caption="`${card.series} - ${card.sell}`" >
@@ -361,18 +396,17 @@ header {
     border-radius: 1rem;
     background-color: rgb(18, 18, 18);
     margin: 0.5rem 0.5rem 0.5rem 0;
+    overflow: hidden;
 }
 
 .content-container {
-    /* height: 100vh; */
     display: flex;
     flex-direction: column;
     grid-area: main-view;
-    /* overflow: hidden; */
 }
 
 .content {
-    margin-top: 64px;
+    margin-top: calc(64px + .5rem);
     overflow: auto;
 }
 
@@ -385,7 +419,6 @@ header {
 
 .main-container {
     height: calc(100vh - 1rem - 64px);
-    min-height: 340px;
     position: relative;
     z-index: 1;
 }
@@ -399,7 +432,7 @@ header {
     transition-duration: .3s;
     transition-property: all;
     transition-timing-function: cubic-bezier(.4,0,.2,1);
-    top: 0;
+    top: 5rem;
 }
 
 .date-list li {
@@ -416,6 +449,10 @@ header {
     line-height: 1.25rem;
     color: rgb(228 228 231);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+}
+
+.date.active {
+    color: #67e8f9;
 }
 
 .tab-ghost-series {
@@ -486,6 +523,10 @@ header {
         top: 0;
         right: 0;
     }
+    
+    .header-container {
+        margin-top: 0;
+    }
 
     .notice {
         display: none;
@@ -512,12 +553,14 @@ header {
         align-items: center;
         justify-content: center;
         gap: .25rem;
+        top: 4.5rem;
     }
 
     #list-switch:checked ~ .list-switch {
         text-align: center;
         width: fit-content;
         position: absolute;
+        top: 0;
         left: -.5rem;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
@@ -556,6 +599,10 @@ header {
 
     #list-switch:checked ~ .content-block #tab-ghost {
         left: 2rem;
+    }
+
+    .date-list {
+        top: 7rem;
     }
 }
 
