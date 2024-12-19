@@ -12,7 +12,6 @@ const seriesSortCardsArr = ref([])
 const dateSortTitleArr = ref([])
 const dateSortCardsArr = ref([])
 const thisCategory = ref('SERIES')
-const sections = ref([])
 const currentSection = ref('') // 紀錄目前所在內容標示
 
 const getDailyCards = async (category) => {
@@ -23,7 +22,7 @@ const getDailyCards = async (category) => {
     dateSortCardsArr.value = []
 
     const { data } = await axios.get("http://localhost:3000/api/daily-card")
-    // console.log(data);
+    console.log(data);
     
     // 取出系列
     data.forEach((item) => {
@@ -109,12 +108,19 @@ const initializeObserver = () => {
     };
   
     const observerCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.getAttribute('data-id');
-          currentSection.value = sectionId;
-        }
-      });
+        // 過濾出正在交叉的區塊
+        const visibleEntries = entries.filter(entry => entry.isIntersecting);
+        
+        if (visibleEntries.length === 0) return;
+        
+        // 將可見的區塊按距離視口頂部的距離排序
+        visibleEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        
+        // 選擇最靠近頂部的區塊
+        const topMostEntry = visibleEntries[0];
+        
+        const sectionId = topMostEntry.target.getAttribute('data-id');
+        currentSection.value = sectionId;
     };
   
     observer.value = new IntersectionObserver(observerCallback, options);
