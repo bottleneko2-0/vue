@@ -297,6 +297,7 @@ export const useDeckMakeStore = defineStore("deck-make", () => {
     removeCard,
     checkTypeAndRunFunction,
     selectedCards,
+    saveLastDeckEdit,
     getLastDeckEdit,
     clearSelectedCards,
     countDeck,

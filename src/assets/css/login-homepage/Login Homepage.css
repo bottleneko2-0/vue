@@ -324,8 +324,6 @@ nav {
   overflow-y: auto;
   /* width: 85%; */
   overflow-x: hidden;
-  position: relative;
-  left: 270px;
   /* fix */
   border-radius: 1rem;
   background-color: #121212;

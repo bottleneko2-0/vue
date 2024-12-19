@@ -7,6 +7,7 @@ import { useDeckMakeStore } from "@/stores/deck-make";
 import { useCardInfoStore } from "@/stores/card-info";
 import Swal from 'sweetalert2'
 import { useCardFilterStore } from "@/stores/card-filter"
+import { useRoute } from 'vue-router'
 
 // 引入CardFilterStore並使用
 const cardFilterStore = useCardFilterStore();
@@ -37,6 +38,7 @@ const {
     seriesCardListLength
   } = storeToRefs(cardSeriesStore);
 const getLastViewSeries = cardSeriesStore.getLastViewSeries;
+const saveLastViewSeries = cardSeriesStore.saveLastViewSeries;
 
 // 引入DeckMakeStore並使用
 const deckMakeStore = useDeckMakeStore();
@@ -468,6 +470,9 @@ const handleUseMyFiltersBtn = (myFilter) => {
     }
   }
   onBeforeMount(async()=> {
+    const route = useRoute();
+    const seriesId = route.params.series_id;
+    saveLastViewSeries(seriesId)
     await getLastViewSeries();
   })
   // Lifecycle hooks

@@ -226,7 +226,7 @@ const fetchMyDecks = async () => {
 const originalSeries = ref([])
 const fetchCardSeries = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/api/serise');
+        const response = await axios.get('http://localhost:3000/api/series');
         originalSeries.value = response.data
         console.log(originalSeries.value)
     }
