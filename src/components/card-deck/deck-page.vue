@@ -175,8 +175,8 @@ export default {
         },
         async copyDeck(){
             this.deckMakeStore.selectedCards = this.deckData.deck
+            this.deckMakeStore.saveLastDeckEdit();
             const cardCode = this.deckData.deck[0].seriesCode
-            console.log(cardCode);
             
             let seriesId = ''
             try {
@@ -188,7 +188,7 @@ export default {
                 }).id
                 
             } catch (error) {
-                
+                console.log(error);
             }
             console.log(seriesId);
             

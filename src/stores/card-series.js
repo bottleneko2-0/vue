@@ -1,7 +1,6 @@
 import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useRoute } from 'vue-router';
 
 export const useCardSeriesStore = defineStore("card-series", () => {
   
@@ -78,18 +77,14 @@ export const useCardSeriesStore = defineStore("card-series", () => {
   };
 
   // 獲取最後瀏覽的系列
-  const getLastViewSeries = async () => {
-    const route = useRoute();
-    const seriesId = route.params.series_id;
-    // console.log(seriesCardList.value);
-    // if (seriesCardList.value.length === 0) {
-    //   const lastViewSeriesId = localStorage.getItem("lastViewSeriesId");
-    //   if(lastViewSeriesId){
-    //     await getSeriesCards(lastViewSeriesId);
-    //   }
-    // }
+  const getLastViewSeries = async (seriesId) => {
     if (seriesId) {
       await getSeriesCards(seriesId);
+    }else if(seriesCardList.value.length === 0) {
+      const lastViewSeriesId = localStorage.getItem("lastViewSeriesId");
+      if(lastViewSeriesId){
+        await getSeriesCards(lastViewSeriesId);
+      }
     }
   };
 
