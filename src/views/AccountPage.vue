@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../components/Loading.vue';
+import SideBar from '../components/SidebarGrid.vue'
 
 const router = useRouter();
 const name = ref('')
@@ -275,7 +276,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div>
+    <div class="layout">
+        <SideBar />
         <header class="h-16 z-10" :class="{ 'scrolled': isScrolled }">
             <nav class="header-container">
                 <button class="flex-none p-1 rounded-full bg-black/50 text-white default-transition hover:bg-zinc-800/50">
@@ -410,7 +412,7 @@ onBeforeUnmount(() => {
                                             <p class="text-xs truncate">{{ deck.deck_id }}</p>
                                         </div>
                                         <p class="pb-1 text-sm md:text-base font-normal md:font-bold !text-white truncate">{{ deck.deck_name }}</p>
-                                        <p class="text-xs md:text-sm font-mono text-zinc-400 truncate">{{ deck.build_time }}</p>
+                                        <p class="text-xs md:text-sm font-mono text-zinc-400 truncate">{{ deck.build_time.substring(0, 10) }}</p>
                                     </div>
                                 </a>
                                 <a href="/mycard" class="url transition-colors overflow-hidden">
@@ -442,7 +444,7 @@ onBeforeUnmount(() => {
                                             <p class="text-xs truncate">{{ post.post_code }}</p>
                                         </div>
                                         <p class="pb-1 text-sm md:text-base font-normal md:font-bold !text-white truncate">{{ post.title }}</p>
-                                        <p class="text-xs md:text-sm font-mono text-zinc-400 truncate">{{ formatDate(post.created_at) }}</p>
+                                        <p class="text-xs md:text-sm font-mono text-zinc-400 truncate">{{ post.created_at.substring(0, 10) }}</p>
                                     </div>
                                 </a>
                                 <a href="/social/my" class="url transition-colors overflow-hidden">
@@ -638,6 +640,11 @@ onBeforeUnmount(() => {
 @import '@/assets/base.css';
 @import '@/assets/main.css';
 
+.layout{
+    display: flex;
+    flex-direction: row;
+}
+
 .default-transition {
     transition-duration: .3s;
     transition-property: all;
@@ -668,6 +675,7 @@ header.scrolled {
     align-items: center;
     position: relative;
     z-index: 1;
+    margin-top: 0.5rem;
 }
 
 .header-title {
@@ -775,7 +783,6 @@ header.scrolled .header-title {
     border-radius: 1rem;
     overflow: scroll;
     background-color: #32c9ff;
-    margin: 0.5rem 0.5rem 0.5rem 0;
 }
 
 .content-container {
@@ -872,8 +879,6 @@ header.scrolled .header-title {
     padding-bottom: 2rem;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    /* margin-right: 0.5rem;
-    margin-bottom: 0.5rem; */
     overflow: auto;
     grid-area: main-view;
     &::-webkit-scrollbar {
@@ -1108,16 +1113,16 @@ header.scrolled .header-title {
 
 .scrollbar-y {
     &::-webkit-scrollbar{
-      width: 1rem;
+        width: 1rem;
     }
     &::-webkit-scrollbar-track {
-      background-color: #121212;
-      border-radius: 10px;
-      margin: 20px 130px;
+        background-color: #121212;
+        border-radius: 10px;
+        margin: 20px 130px;
     }
     /* &::-webkit-scrollbar-thumb{
-      border-radius: 10px;
-      background-color: cyan;
+        border-radius: 10px;
+        background-color: cyan;
     } */
 }
 
@@ -1430,6 +1435,15 @@ a {
         border-radius: 0%;
     }
 
+    .header-container {
+        background-color: #30bdf0;
+        margin-top: 0rem;
+    }
+
+    .show-card[data-v-ea08477a]::-webkit-scrollbar {
+        display: none; 
+    }
+
     .arrow-right{
         display: none;
     }
@@ -1472,6 +1486,8 @@ a {
     .show-card a{
         padding: 0;
         background-color: transparent;
+        display: block;
+        min-width: calc(50% - 2rem);
     }
 
     .show-card a:hover{

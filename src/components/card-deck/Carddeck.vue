@@ -1336,7 +1336,7 @@ export default {
 
     .message-section{
         width: 95%;
-        height: 60vh;
+        height: 40vh;
     }
 
     .message-scroll{

@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref, onMounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 // import CardInfo from "@/views/CardInfo.vue";
@@ -7,7 +7,7 @@ import { useCardInfoStore } from "@/stores/card-info";
 
 const cardInfoStore = useCardInfoStore();
 const { cardInfoDisplay } = storeToRefs(cardInfoStore);
-</script>
+</script> -->
 
 <template>
     <router-view />
