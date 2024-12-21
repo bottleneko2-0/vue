@@ -58,12 +58,16 @@ export default {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
         const errors = {}
 
-        if (!emailRegex.test(this.email.trim())) {
-        errors.email = '電子郵件格式錯誤'
-        } 
-        
-        if (this.password.trim().length < 6) {
-        errors.password = '密碼至少需要6個字元'
+        if (this.email.trim() === '' || this.password.trim() === '') {
+            errors.general = '請填寫完整資料'
+        } else {
+            if (!emailRegex.test(this.email.trim())) {
+            errors.email = '電子郵件格式錯誤'
+            } 
+            
+            if (this.password.trim().length < 6) {
+            errors.password = '密碼至少需要6個字元'
+            }
         }
 
         if (Object.keys(errors).length > 0) {

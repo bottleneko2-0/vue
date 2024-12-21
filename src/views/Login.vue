@@ -22,14 +22,11 @@ const password = ref("")
 const API_URL = 'http://localhost:3000/auth'
 
 const submit = async () => {
-    console.log(email.value, password.value);
   try {
     const res = await axios.post(`${API_URL}/login`, {
       email: email.value,
       password: password.value
     })
-
-    console.log(res.data);
 
     // 後端驗證成功回傳 token
     const token = res.data.token || res.data.data?.token

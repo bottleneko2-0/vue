@@ -24,7 +24,7 @@ const postCount = computed(() => posts.value.length);
 
 const getAccount = async () => {
   const token = localStorage.getItem('token');
-  console.log('token:', token);
+  
   if (!token) {
     Swal.fire({
         icon: 'error',
@@ -85,9 +85,7 @@ const editName = () => {
 };
 
 // 保存新的用户名
-const saveName = async () => {
-  console.log('saveName called');
-  
+const saveName = async () => {  
   const token = localStorage.getItem('token');
   if (!token) {
     Swal.fire({
@@ -125,15 +123,12 @@ const saveName = async () => {
 
 // 取消编辑
 const cancelEdit = () => {
-    console.log('cancelEdit called');
   name.value = originalName.value; // 恢复原始用户名
   isEditingName.value = false;
 };
 
 // 點擊上傳頭像
 const uploadPic = () => {
-    console.log('uploadPic called');
-    
     if (fileInput.value) {
       fileInput.value.click();
     }
@@ -167,8 +162,6 @@ const handleFileChange = async (event) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
-    console.log('圖片上傳成功：', res.data);
     
     // 更新圖片網址，添加時間戳，避免緩存
     picture.value = res.data.data.picture + '?' + Date.now();
@@ -181,7 +174,6 @@ const handleFileChange = async (event) => {
     });
   } catch (error) {
     console.error('圖片上傳失敗：', error);
-    console.log(error)
     Swal.fire({
       icon: 'error',
       title: '圖片上傳失敗',
@@ -207,7 +199,6 @@ const getUserDecks = async () => {
     });
 
     decks.value = res.data.decks;
-    console.log('用戶牌組：', decks.value);
     
   } catch (error) {
     console.error('獲取用戶牌組失敗：', error);
@@ -234,10 +225,8 @@ const getUserArticles = async () => {
     });
 
     posts.value = res.data.posts;
-    console.log('用戶文章：', posts.value);
     
   } catch (error) {
-    console.error('獲取用戶文章失敗：', error);
     Swal.fire({
       icon: 'error',
       title: '獲取用戶文章失敗',
