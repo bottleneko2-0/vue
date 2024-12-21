@@ -2,6 +2,7 @@
 import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import axios from "axios";
 import placeholderImage from '@/img/card-loading.png' // 預設圖片
+import NavLoginBtn from "./NavLoginBtn.vue";
 
 const isScrolled = ref(false); // 是否滾動
 
@@ -102,7 +103,7 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
             </div>
-            <div class="items-center gap-1 text-white rounded-full login-btn bg-black/50 default-transition hover:bg-zinc-800/50">
+            <!-- <div class="items-center gap-1 text-white rounded-full login-btn bg-black/50 default-transition hover:bg-zinc-800/50">
                 <div class="flex flex-col items-center gap-1 p-1 rounded-full">
                     <div class="flex-none rounded-full size-6 bg-black/70">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="m-1 text-zinc-200">
@@ -116,7 +117,8 @@ onBeforeUnmount(() => {
                         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
                     </svg>
                 </div>
-            </div>
+            </div> -->
+            <NavLoginBtn />
         </nav>
     </header>
 

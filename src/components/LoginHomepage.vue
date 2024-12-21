@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
+import NavLoginBtn from './NavLoginBtn.vue';
 
 onMounted(() => {
   import ("@/assets/js/login-homepage/css-control.js")
@@ -26,12 +27,13 @@ onMounted(() => {
             </div>
           </div>
           <div class="icon"><i class="fa-regular fa-bell"></i></div>
-          <div class="login" id="login">
+          <!-- <div class="login" id="login">
             <span><i class="fa-regular fa-user"></i></span>
             <span>登入</span>
             <span><i class="fa-solid fa-chevron-down"></i></span>
-          </div>
+          </div> -->
         </div>
+        <NavLoginBtn />
       </div>
 
       <div class="aa">
